@@ -13,7 +13,7 @@ library(dplyr) # manipulacao de dados
 library(readr) 
 
 # Diretorio da Trabalho
-setwd('D:/GoogleDrive/Mestrado_unesp/openDataSUS')
+setwd('D:/GoogleDrive/Mestrado_unesp/PPGMiT-openDataSUS')
 
 # Importacao dos arquivos anuais : INFLUD* 2021, 2022 e 2023 (2.339.381)
 df_opendatasus<-list.files(path="./dados",pattern="*.csv", full.names = TRUE) %>%
@@ -24,7 +24,7 @@ df_opendatasus<-list.files(path="./dados",pattern="*.csv", full.names = TRUE) %>
 class(df_opendatasus)
 View(df_opendatasus)
 str(df_opendatasus) # apenas int e char
-summary(df)
+summary(df_opendatasus)
 
 # Filtro - 78-Classificacao Final do caso (5-SRAG por COVID-19)
 df_covid <- df_opendatasus %>% filter(CLASSI_FIN == "5")
