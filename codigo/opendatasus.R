@@ -28,6 +28,12 @@ str(df_opendatasus) # apenas int e char
 summary(df_opendatasus)
 
 # Variaveis que serao utilizadas :
+#   Gerais
+#   Classificacao e Evolucao
+#   Internacao
+#   Sintomas
+#   Fatores de Risco
+#   
 # Filtros : 78-Classificacao Final do caso (5-SRAG por COVID-19)
 #           80- Evolucaçao do caso    (2-Óbito)
 
@@ -38,6 +44,8 @@ df_covid_mortalidade <- df_opendatasus %>% select(NU_IDADE_N,
                                       #Classificacao e Evolucao
                                       CLASSI_FIN, 
                                       EVOLUCAO,
+                                      DT_EVOLUCA, #Data Obito
+                                      DT_ENCERRA,
                                       #Internacao
                                       HOSPITAL,
                                       DT_INTERNA,
@@ -60,12 +68,12 @@ df_covid_mortalidade <- df_opendatasus %>% select(NU_IDADE_N,
                                       FADIGA,
                                       PERD_OLFT,
                                       PERD_PALA,
-                                      #OUTROS_SIN,
-                                      #OUTROS_DES,
+                                      OUTRO_SIN,
+                                      OUTRO_DES,
                                       #Fator de Risco
                                       FATOR_RISC,
                                       PUERPERA,
-                                      #CARDIOPAT,
+                                      CARDIOPATI,
                                       HEMATOLOGI,
                                       SIND_DOWN,
                                       HEPATICA,
@@ -78,13 +86,10 @@ df_covid_mortalidade <- df_opendatasus %>% select(NU_IDADE_N,
                                       OBESIDADE,
                                       OBES_IMC,
                                       OUT_MORBI,
-                                      #MORD_DESC,
-                                      #Obito
-                                      DT_EVOLUCA,
-                                      DT_ENCERRA)  %>% filter(CLASSI_FIN == "5", EVOLUCAO == "2") 
+                                      MORB_DESC
+                                      )  %>% filter(CLASSI_FIN == "5", EVOLUCAO == "2") 
 
-
-View(df_covid_mortalidade)
+names(df_covid_mortalidade)
 summary(df_covid_mortalidade)
 
 
