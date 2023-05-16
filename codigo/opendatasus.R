@@ -56,7 +56,7 @@ rm(ANO_ENCERRA)
 
 # Numero Total de Notificacoes 
 num_notificacoes <- as.numeric(count(df_opendatasus))
-num_notificacoes # 2351198
+num_notificacoes # 2.351.198
 
 num_notificacoes_ano <- aggregate(df_opendatasus$ANO_NOTIFIC,by=list(df_opendatasus$ANO_NOTIFIC), FUN=length)
 num_notificacoes_ano <- setNames(num_notificacoes_ano, c("Ano", "Qtde"))
@@ -83,6 +83,7 @@ num_notificacoes_dif <- as.numeric(nrow(df_opendatasus[df_opendatasus$ANO_NOTIFI
 # 5
 
 
+# Dataframe : df_covid
 # Variaveis que serao utilizadas :
 #   Periodo - Ano
 #   Classificacao e Evolucao
@@ -97,9 +98,8 @@ num_notificacoes_dif <- as.numeric(nrow(df_opendatasus[df_opendatasus$ANO_NOTIFI
 #           78-Classificacao Final do caso (5-SRAG por COVID-19)
 #           80- Evolucaçao do caso    (2-Óbito)
 #           
-
-# 442.890 obs - 51 variaveis
-df_covid_mortalidade <- df_opendatasus %>% select(
+# 1.318.333 obs - 51 variaveis
+df_covid <- df_opendatasus %>% select(
                                       # Periodo - Ano
                                       ANO_NOTIFIC,
                                       ANO_INTERNA,
@@ -160,37 +160,53 @@ df_covid_mortalidade <- df_opendatasus %>% select(
                                       MORB_DESC
                                       )  %>% filter((ANO_NOTIFIC == "2021" | ANO_NOTIFIC == "2022" | ANO_NOTIFIC == "2023"),
                                                     (ANO_EVOLUCA == "2021" | ANO_EVOLUCA == "2022" | ANO_EVOLUCA == "2023"),
-                                                    CLASSI_FIN == "5", 
-                                                    EVOLUCAO == "2") 
+                                                    CLASSI_FIN == "5")
 
-names(df_covid_mortalidade)
-summary(df_covid_mortalidade)
+names(df_covid)
+summary(df_covid)
 
+# Liberar memoria
+rm(df_opendatasus)
+
+# Dataframe : df_covid_obitos
+# Variaveis que serao utilizadas :
+#   Periodo - Ano
+#   Classificacao e Evolucao
+#   Dados Gerais
+#   Internacao
+#   Sintomas
+#   Fatores de Risco
+#   
+# Filtros : 80- Evolucaçao do caso    (2-Óbito) no dataframe df_covid
+#           
+# 442.890 obs - 51 variaveis
+
+df_covid_obitos <- df_covid %>% filter(EVOLUCAO == "2")
 
 # Verificacao de Todas as variaveis
 
 # ANO_NOTIFIC - Ano Notificacao
-distinct(tbl_df(df_covid_mortalidade$ANO_NOTIFIC))
+distinct(tbl_df(df_covid$ANO_NOTIFIC))
 # 2021 2022 2023
 
 # ANO_INTERNA - Ano Internacao
-distinct(tbl_df(df_covid_mortalidade$ANO_INTERNA))
+distinct(tbl_df(df_covid$ANO_INTERNA))
 # 2021 NA 2020 2022 2023
 
 # ANO_EVOLUCAO - Ano Evolucao, no caso Ano do Obito
-distinct(tbl_df(df_covid_mortalidade$ANO_EVOLUCA))
+distinct(tbl_df(df_covid$ANO_EVOLUCA))
 # 2021 NA 2022 2023
 
 # ANO_ENCERRA - Ano Encerramento da Notificacao
-distinct(tbl_df(df_covid_mortalidade$ANO_ENCERRA))
+distinct(tbl_df(df_covid$ANO_ENCERRA))
 # 2021 NA 2022 2023
 
 # CLASSI_FIN - Classificacao Final do caso (5-SRAG por COVID-19)
-distinct(tbl_df(df_covid_mortalidade$CLASSI_FIN))
+distinct(tbl_df(df_covid$CLASSI_FIN))
 # 5
 
 # EVOLUC - Evolucaçao do caso    (2-Óbito)
-distinct(tbl_df(df_covid_mortalidade$EVOLUC))
+distinct(tbl_df(df_covid$EVOLUC))
 # 2
 
 # NU_IDADE_N
@@ -237,34 +253,28 @@ distinct(tbl_df(df_covid_mortalidade$CS_RACA))
 # Grafico 01_mapa_Obitos_BR
 estado <- read_state(year=2020)
 
-num_obitos_estado <- aggregate(df_covid_mortalidade$SG_UF_INTE,by=list(df_covid_mortalidade$SG_UF_INTE), FUN=length)
+num_obitos_estado <- aggregate(df_covid_obitos$SG_UF_INTE,by=list(df_covid_obitos$SG_UF_INTE), FUN=length)
 num_obitos_estado <- setNames(num_obitos_estado, c("abbrev_state", "Qtde"))
 num_obitos_estado
+
+dados_mapa <- estado %>% inner_join(num_obitos_estado)
+dados_mapa
 
 ggplot()+
   geom_sf(data=dados_mapa, aes(fill=Qtde), color = 'gray')+
   scale_fill_distiller(palette="Reds", direction = 1, name= "Num Óbitos", labels = label_number(drop0trailing = T, big.mark = ""))+
   labs(x=NULL, y=NULL)+
   labs(title = 'Mapa de Óbitos por Estado', size=10)+
-  geom_sf_text(data=mapa, aes(label = abbrev_state), size = 3.5, color = "black")+
+  geom_sf_text(data=estado, aes(label = abbrev_state), size = 3.5, color = "black")+
   scale_size_continuous(labels= comma)+
   theme_minimal()+
   theme(axis.text.x=element_blank(),axis.text.y=element_blank())+
   annotation_scale()+
   annotation_north_arrow(location='tl')
 
-# Grafico 02 : Mapa de Obitos por Municipio
-municipios <- read_municipality(year=2020)
+# Grafico 02_idades_obitos
+summary(df_covid_obitos$NU_IDADE_N)
 
-municipios
-  
-num_obitos_municipio <- df_covid_mortalidade %>%
-                          count(ID_MUNICIP, SG_UF_NOT,CO_MUN_NOT, sort=TRUE)
-
-municipios
-
-filter(municipios, name_muni == 'Bauru')
-filter(num_obitos_municipio, ID_MUNICIP == 'BAURU') # 350600 
-
-# Liberar memoria
-rm(df_opendatasus)
+df_covid_obitos %>% 
+  ggplot(aes(x = NU_IDADE_N)) +
+  geom_histogram()
