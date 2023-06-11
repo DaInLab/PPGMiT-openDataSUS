@@ -1,0 +1,558 @@
+---
+title: "COVID-19 Óbitos DashBoard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    horizontal_layout: fill
+    navbar:
+      - { title: "Sobre", href: "https://example.com/about" }
+    source_code: "https://github.com/user/repo"  
+runtime: shyni    
+---
+<style type="text/css">
+.value-box .value {
+    color: white;
+}
+.value-box .caption {
+    color: white;
+    font: 10;
+}
+</style>
+
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+```
+
+
+Visão Geral
+===
+
+
+Column {data-height=200; data-width=180}
+------
+
+### Numero Notificações {.no-title}
+
+```{r}
+valueBox(15007, caption = "Numero Notificações", color="black")
+
+```
+
+
+### Obitos {.no-title}
+
+```{r}
+gauge(55, min = 0, max = 100, symbol = '%', label="Obitos %", gaugeSectors(
+  success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
+
+```
+
+### Óbitos Outras Doenças {.no-title}
+
+```{r}
+gauge(13, min = 0, max = 100, symbol = '%', label="Óbitos Outras Doenças",gaugeSectors(
+  success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
+
+```
+
+### Cura {.no-title}
+
+```{r}
+gauge(30, min = 0, max = 100, symbol = '%', label="Cura %", gaugeSectors(
+  success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
+
+```
+
+
+### Sem Informação {.no-title}
+
+```{r}
+gauge(2, min = 0, max = 100, symbol = '%', label= "Sem Informação", gaugeSectors(
+  success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
+
+```
+
+Column {.tabset}
+---
+### Mapa Óbitos Brasil
+
+```{r}
+
+```
+
+### Fatores de Risco 
+
+```{r}
+
+```
+
+### Sinais e Sintomas
+
+```{r}
+
+```
+
+### Idade
+
+```{r}
+
+```
+
+### Sexo
+
+```{r}
+
+```
+
+### Escolaridade
+
+```{r}
+
+```
+
+
+Column {data-height=200; data-width=250}
+------
+
+### {.no-title}
+
+```{r}
+valueBox(150007, caption = "Numero Óbitos", color="red")
+
+```
+
+### {.no-title}
+
+```{r}
+valueBox('Diabetes Mellitus', caption = "Principal Fator de Risco - Óbitos", color="brown")
+
+```
+
+
+### {.no-title}
+
+```{r}
+valueBox('Dor de Garganta', caption = "Principal Sinal ou Sintoma - Óbitos", color="orange")
+
+```
+
+### {.no-title}
+
+```{r}
+valueBox(46.5, caption = "Média Idade Óbitos", color="blue")
+
+```
+
+### {.no-title}
+
+```{r}
+valueBox('Masculino', caption = "Sexo", color="gray")
+
+```
+
+### {.no-title}
+
+```{r}
+valueBox('Superior', caption = "Escolaridade", color="gray")
+
+```
+
+
+2021
+===
+
+Column {data-height=200; data-width=180}
+------
+
+### Numero Notificações {.no-title}
+
+```{r}
+valueBox(2021, caption = "Numero Notificações", color="black")
+
+```
+
+
+### Obitos {.no-title}
+
+```{r}
+gauge(55, min = 0, max = 100, symbol = '%', label="Obitos %", gaugeSectors(
+  success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
+
+```
+
+### Óbitos Outras Doenças {.no-title}
+
+```{r}
+gauge(13, min = 0, max = 100, symbol = '%', label="Óbitos Outras Doenças",gaugeSectors(
+  success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
+
+```
+
+### Cura {.no-title}
+
+```{r}
+gauge(30, min = 0, max = 100, symbol = '%', label="Cura %", gaugeSectors(
+  success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
+
+```
+
+
+### Sem Informação {.no-title}
+
+```{r}
+gauge(2, min = 0, max = 100, symbol = '%', label= "Sem Informação", gaugeSectors(
+  success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
+
+```
+
+Column {.tabset}
+---
+### Mapa Óbitos Brasil
+
+```{r}
+
+```
+
+### Fatores de Risco 
+
+```{r}
+
+```
+
+### Sinais e Sintomas
+
+```{r}
+
+```
+
+### Idade
+
+```{r}
+
+```
+
+### Sexo
+
+```{r}
+
+```
+
+### Escolaridade
+
+```{r}
+
+```
+
+
+Column {data-height=200; data-width=250}
+------
+
+### {.no-title}
+
+```{r}
+valueBox(150007, caption = "Numero Óbitos", color="red")
+
+```
+
+### {.no-title}
+
+```{r}
+valueBox('Diabetes Mellitus', caption = "Principal Fator de Risco - Óbitos", color="brown")
+
+```
+
+
+### {.no-title}
+
+```{r}
+valueBox('Dor de Garganta', caption = "Principal Sinal ou Sintoma - Óbitos", color="orange")
+
+```
+
+### {.no-title}
+
+```{r}
+valueBox(46.5, caption = "Média Idade Óbitos", color="blue")
+
+```
+
+### {.no-title}
+
+```{r}
+valueBox('Masculino', caption = "Sexo", color="gray")
+
+```
+
+### {.no-title}
+
+```{r}
+valueBox('Superior', caption = "Escolaridade", color="gray")
+
+```
+
+2022
+===
+
+Column {data-height=200; data-width=180}
+------
+
+### Numero Notificações {.no-title}
+
+```{r}
+valueBox(2022, caption = "Numero Notificações", color="black")
+
+```
+
+
+### Obitos {.no-title}
+
+```{r}
+gauge(55, min = 0, max = 100, symbol = '%', label="Obitos %", gaugeSectors(
+  success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
+
+```
+
+### Óbitos Outras Doenças {.no-title}
+
+```{r}
+gauge(13, min = 0, max = 100, symbol = '%', label="Óbitos Outras Doenças",gaugeSectors(
+  success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
+
+```
+
+### Cura {.no-title}
+
+```{r}
+gauge(30, min = 0, max = 100, symbol = '%', label="Cura %", gaugeSectors(
+  success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
+
+```
+
+
+### Sem Informação {.no-title}
+
+```{r}
+gauge(2, min = 0, max = 100, symbol = '%', label= "Sem Informação", gaugeSectors(
+  success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
+
+```
+
+Column {.tabset}
+---
+### Mapa Óbitos Brasil
+
+```{r}
+
+```
+
+### Fatores de Risco 
+
+```{r}
+
+```
+
+### Sinais e Sintomas
+
+```{r}
+
+```
+
+### Idade
+
+```{r}
+
+```
+
+### Sexo
+
+```{r}
+
+```
+
+### Escolaridade
+
+```{r}
+
+```
+
+
+Column {data-height=200; data-width=250}
+------
+
+### {.no-title}
+
+```{r}
+valueBox(150007, caption = "Numero Óbitos", color="red")
+
+```
+
+### {.no-title}
+
+```{r}
+valueBox('Diabetes Mellitus', caption = "Principal Fator de Risco - Óbitos", color="brown")
+
+```
+
+
+### {.no-title}
+
+```{r}
+valueBox('Dor de Garganta', caption = "Principal Sinal ou Sintoma - Óbitos", color="orange")
+
+```
+
+### {.no-title}
+
+```{r}
+valueBox(46.5, caption = "Média Idade Óbitos", color="blue")
+
+```
+
+### {.no-title}
+
+```{r}
+valueBox('Masculino', caption = "Sexo", color="gray")
+
+```
+
+### {.no-title}
+
+```{r}
+valueBox('Superior', caption = "Escolaridade", color="gray")
+
+```
+
+
+2023
+===
+
+Column {data-height=200; data-width=180}
+------
+
+### Numero Notificações {.no-title}
+
+```{r}
+valueBox(2023, caption = "Numero Notificações", color="black")
+
+```
+
+
+### Obitos {.no-title}
+
+```{r}
+gauge(55, min = 0, max = 100, symbol = '%', label="Obitos %", gaugeSectors(
+  success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
+
+```
+
+### Óbitos Outras Doenças {.no-title}
+
+```{r}
+gauge(13, min = 0, max = 100, symbol = '%', label="Óbitos Outras Doenças",gaugeSectors(
+  success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
+
+```
+
+### Cura {.no-title}
+
+```{r}
+gauge(30, min = 0, max = 100, symbol = '%', label="Cura %", gaugeSectors(
+  success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
+
+```
+
+
+### Sem Informação {.no-title}
+
+```{r}
+gauge(2, min = 0, max = 100, symbol = '%', label= "Sem Informação", gaugeSectors(
+  success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
+
+```
+
+Column {.tabset}
+---
+### Mapa Óbitos Brasil
+
+```{r}
+
+```
+
+### Fatores de Risco 
+
+```{r}
+
+```
+
+### Sinais e Sintomas
+
+```{r}
+
+```
+
+### Idade
+
+```{r}
+
+```
+
+### Sexo
+
+```{r}
+
+```
+
+### Escolaridade
+
+```{r}
+
+```
+
+
+Column {data-height=200; data-width=250}
+------
+
+### {.no-title}
+
+```{r}
+valueBox(150007, caption = "Numero Óbitos", color="red")
+
+```
+
+### {.no-title}
+
+```{r}
+valueBox('Diabetes Mellitus', caption = "Principal Fator de Risco - Óbitos", color="brown")
+
+```
+
+
+### {.no-title}
+
+```{r}
+valueBox('Dor de Garganta', caption = "Principal Sinal ou Sintoma - Óbitos", color="orange")
+
+```
+
+### {.no-title}
+
+```{r}
+valueBox(46.5, caption = "Média Idade Óbitos", color="blue")
+
+```
+
+### {.no-title}
+
+```{r}
+valueBox('Masculino', caption = "Sexo", color="gray")
+
+```
+
+### {.no-title}
+
+```{r}
+valueBox('Superior', caption = "Escolaridade", color="gray")
+
+```
