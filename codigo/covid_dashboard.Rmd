@@ -1,5 +1,5 @@
 ---
-title: "COVID-19 Óbitos DashBoard"
+title: "COVID-19 Óbitos"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
@@ -22,13 +22,35 @@ runtime: shyni
 
 
 ```{r setup, include=FALSE}
-library(flexdashboard)
-```
+knitr::opts_chunk$set("'D:/GoogleDrive/Mestrado_unesp/PPGMiT-openDataSUS'") 
 
+# Diretorio da Trabalho
+setwd('D:/GoogleDrive/Mestrado_unesp/PPGMiT-openDataSUS')
+
+# Carregando as bibliotecas necessárias
+if (!("ggplot2") %in% installed.packages()) install.packages("ggplot2")   
+if (!("dplyr") %in% installed.packages()) install.packages("dplyr")
+if (!("readr") %in% installed.packages()) install.packages("readr")
+if (!("geobr") %in% installed.packages()) install.packages("geobr")
+if (!("scales") %in% installed.packages()) install.packages("scales")
+if (!("ggspatial") %in% installed.packages()) install.packages("ggspatial")
+
+library(ggplot2) # Visualizacao dos dados
+library(dplyr)   # Preparacao de dados
+library(readr)   # Importacao dos dadoslibrary(geobr)   # Mapa do Brasil
+library(scales)
+library(ggspatial)
+library(flexdashboard)
+
+# Importacao dos arquivos anuais : INFLUD* 2021, 2022 e 2023 (2.351.198)
+df_opendatasus<-list.files(path="./dados",pattern="*.csv", full.names = TRUE) %>%
+  lapply(read.csv,stringsAsFactors=F, sep=';') %>%
+  bind_rows
+
+```
 
 Visão Geral
 ===
-
 
 Column {data-height=200; data-width=180}
 ------
@@ -36,7 +58,8 @@ Column {data-height=200; data-width=180}
 ### Numero Notificações {.no-title}
 
 ```{r}
-valueBox(15007, caption = "Numero Notificações", color="black")
+num_notificacoes <- as.numeric(count(df_opendatasus))
+valueBox(format(num_notificacoes, big.mark = ".") , caption = "Numero Notificações", color="black")
 
 ```
 
@@ -119,7 +142,7 @@ Column {data-height=200; data-width=250}
 ### {.no-title}
 
 ```{r}
-valueBox(150007, caption = "Numero Óbitos", color="red")
+valueBox(1507, caption = "Numero Óbitos", color="red")
 
 ```
 
@@ -252,7 +275,7 @@ Column {data-height=200; data-width=250}
 ### {.no-title}
 
 ```{r}
-valueBox(150007, caption = "Numero Óbitos", color="red")
+valueBox(1007, caption = "Numero Óbitos", color="red")
 
 ```
 
