@@ -21,22 +21,20 @@ install.packages("zoo")
 library(ggplot2) # visualizacao dos dados
 library(dplyr)   # preparacao dos dados
 library(readr)   # importacao dos dados
-library(lubridate) # manipular datas
+library(lubridate) # Datas
 library(geobr)   # mapa BR
 library(scales)  # mapa BR
 library(ggspatial) # mapa BR
 library(zoo) # calcular rollmean
 
-
 # Dataframe : df_opendatasus
 # Todos os registros do OPENDATASUS (sem filtro)
 # Importacao dos arquivos anuais : INFLUD* 2021, 2022 e 2023 (2.351.198)
-
 df_opendatasus<-list.files(path="./dados",pattern="INFLUD", full.names = TRUE) %>%
   lapply(read.csv,stringsAsFactors=F, sep=';') %>%
   bind_rows
 
-# Variaveis com Data
+# Ajustando tipo das Variaveis Data
 df_opendatasus$DT_NOTIFIC <- format(as.Date(df_opendatasus$DT_NOTIFIC, format='%d/%m/%Y'))
 df_opendatasus$DT_INTERNA <- format(as.Date(df_opendatasus$DT_INTERNA, format='%d/%m/%Y'))
 df_opendatasus$DT_EVOLUCA <- format(as.Date(df_opendatasus$DT_EVOLUCA, format='%d/%m/%Y'))
@@ -148,8 +146,11 @@ rm(df_opendatasus)
 df_covid_obitos <- df_covid %>% filter(EVOLUCAO == "2")
 
 
-# Criando arquivo apenas com Classificacao Final : SRAG por COVID-19
+# Criando arquivo do dataframe df_covid (Classificacao Final : SRAG por COVID-19)
 write_csv2(df_covid, file='./dados/COVID.csv')
+
+# # Criando arquivo do dataframe df_covid_obitos (Classificacao Final : SRAG por COVID-19 e Evolucao do Caso : Obito)
+write_csv2(df_covid_obitos, file='./dados/COVID_OBITOS.csv')
 
 # Numero Total de Notificacoes COVID
 num_notificacoes <- as.numeric(count(df_covid))
@@ -170,11 +171,6 @@ num_notificacoes_2022 # 579161
 # 2023
 num_notificacoes_2023 <- as.numeric(num_notificacoes_ano[num_notificacoes_ano$Ano == "2023",2])
 num_notificacoes_2023 # 68243
-
-# Numero de notificacoes diferentes de 2021, 2022, 2023
-num_notificacoes_dif <- as.numeric(nrow(df_opendatasus[df_opendatasus$ANO_NOTIFIC !='2021' & df_opendatasus$ANO_NOTIFIC !='2022' & df_opendatasus$ANO_NOTIFIC !='2023' ,]))
-# 5
-
 
 
 # Verificacao de Todas as variaveis
@@ -204,16 +200,16 @@ distinct(tbl_df(df_covid$EVOLUC))
 # 2
 
 # NU_IDADE_N
-distinct(tbl_df(df_covid_mortalidade$NU_IDADE_N))
+distinct(tbl_df(df_covid_obitos$NU_IDADE_N))
 
 # CS_SEXO
-distinct(tbl_df(df_covid_mortalidade$CS_SEXO))
+distinct(tbl_df(df_covid_obitos$CS_SEXO))
 # 1 M    
 # 2 F    
 # 3 I  
 
 # CS_GESTANT
-distinct(tbl_df(df_covid_mortalidade$CS_GESTANT))
+distinct(tbl_df(df_covid_obitos$CS_GESTANT))
 # 1     6
 # 2     5
 # 3     9
@@ -224,7 +220,7 @@ distinct(tbl_df(df_covid_mortalidade$CS_GESTANT))
 # 8     4
 
 # CS_ESCOL_N,
-distinct(tbl_df(df_covid_mortalidade$CS_ESCOL_N))
+distinct(tbl_df(df_covid_obitos$CS_ESCOL_N))
 # 1     9
 # 2     1
 # 3     0
