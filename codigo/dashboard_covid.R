@@ -202,27 +202,91 @@ media_idade_obitos_2021 <- round(mean(df_obitos_2021$NU_IDADE_N),1)
 media_idade_obitos_2022 <- round(mean(df_obitos_2022$NU_IDADE_N),1)
 media_idade_obitos_2023 <- round(mean(df_obitos_2023$NU_IDADE_N),1)
 
-# Sexo
-df_obitos_sexo <- as.data.frame(table(df_obitos$CS_SEXO)) %>% arrange(desc(Freq))
-df_obitos_sexo <- setNames(df_obitos_sexo, c("Sexo", "Qtde"))
+# Sexo Obitos
+df_obitos_sexo <- as.data.frame(table(df_obitos$ANO_EVOLUCA,df_obitos$CS_SEXO)) %>% arrange(desc(Var1), desc(Freq))
+df_obitos_sexo <- setNames(df_obitos_sexo, c("Ano", "Sexo", "Qtde"))
 df_obitos_sexo['Label'] <- ifelse(df_obitos_sexo$Sexo == "M", "Masculino",ifelse(df_obitos_sexo$Sexo == "F", "Feminino", "Indefinido" ))
-df_obitos_sexo['Percentual'] <- round(df_obitos_sexo$Qtde / sum(df_obitos_sexo$Qtde) * 100,1)
-df_obitos_sexo
+
+# Sexo Obitos Geral
+df_obitos_sexo_geral <- df_obitos_sexo %>% group_by(Label) %>% 
+                        summarise(Qtde=sum(Qtde)) %>%
+                        arrange(desc(Qtde))
+df_obitos_sexo_geral['Percentual'] = round((df_obitos_sexo_geral$Qtde/sum(df_obitos_sexo_geral$Qtde))* 100,1)
+df_obitos_sexo_geral
+
+# Sexo Obitos 2021
+df_obitos_sexo_2021 <- df_obitos_sexo %>% 
+  filter(Ano == '2021') %>%
+  group_by(Label) %>% 
+  summarise(Qtde=sum(Qtde)) %>%
+  arrange(desc(Qtde))
+df_obitos_sexo_2021['Percentual'] = round((df_obitos_sexo_2021$Qtde/sum(df_obitos_sexo_2021$Qtde))* 100,1)
+df_obitos_sexo_2021
+
+# Sexo Obitos 2022
+df_obitos_sexo_2022 <- df_obitos_sexo %>% 
+  filter(Ano == '2022') %>%
+  group_by(Label) %>% 
+  summarise(Qtde=sum(Qtde)) %>%
+  arrange(desc(Qtde))
+df_obitos_sexo_2022['Percentual'] = round((df_obitos_sexo_2022$Qtde/sum(df_obitos_sexo_2022$Qtde))* 100,1)
+df_obitos_sexo_2022
+
+# Sexo Obitos 2023
+df_obitos_sexo_2023 <- df_obitos_sexo %>% 
+  filter(Ano == '2023') %>%
+  group_by(Label) %>% 
+  summarise(Qtde=sum(Qtde)) %>%
+  arrange(desc(Qtde))
+df_obitos_sexo_2023['Percentual'] = round((df_obitos_sexo_2023$Qtde/sum(df_obitos_sexo_2023$Qtde))* 100,1)
+df_obitos_sexo_2023
 
 # Escolaridade
-df_obitos_escol <- as.data.frame(table(df_obitos$CS_ESCOL_N)) %>% arrange(desc(Freq))
-df_obitos_escol <- setNames(df_obitos_escol, c("Escolaridade", "Qtde"))
+df_obitos_escol <- as.data.frame(table(df_obitos$ANO_EVOLUCA, df_obitos$CS_ESCOL_N)) %>% arrange(desc(Var1),desc(Freq))
+df_obitos_escol <- setNames(df_obitos_escol, c("Ano","Escolaridade", "Qtde"))
 df_obitos_escol['Label'] <- ifelse(df_obitos_escol$Escolaridade == 0, "Sem Escolaridade",
                                   ifelse(df_obitos_escol$Escolaridade == 1, "Ensino Fundamental (1o Ciclo)", 
                                   ifelse(df_obitos_escol$Escolaridade == 2, "Ensino Fundamental (2o Ciclo)",
                                   ifelse(df_obitos_escol$Escolaridade == 3, "Ensino Médio",
                                   ifelse(df_obitos_escol$Escolaridade == 4, "Ensino Superior", "Ignorado")))))
-df_obitos_escol['Percentual'] <- round(df_obitos_escol$Qtde / sum(df_obitos_escol$Qtde) * 100,1)
-df_obitos_escol
+
+# Escolaridade Geral
+df_obitos_escol_geral <- df_obitos_escol %>% group_by(Label) %>% 
+  summarise(Qtde=sum(Qtde)) %>%
+  arrange(desc(Qtde))
+df_obitos_escol_geral['Percentual'] <- round(df_obitos_escol_geral$Qtde / sum(df_obitos_escol_geral$Qtde) * 100,1)
+df_obitos_escol_geral
+
+# Escolaridade 2021
+df_obitos_escol_2021 <- df_obitos_escol %>% 
+  filter(Ano == '2021') %>%
+  group_by(Label) %>% 
+  summarise(Qtde=sum(Qtde)) %>%
+  arrange(desc(Qtde))
+df_obitos_escol_2021['Percentual'] = round((df_obitos_escol_2021$Qtde/sum(df_obitos_escol_2021$Qtde))* 100,1)
+df_obitos_escol_2021
+
+# Escolaridade 2022
+df_obitos_escol_2022 <- df_obitos_escol %>% 
+  filter(Ano == '2022') %>%
+  group_by(Label) %>% 
+  summarise(Qtde=sum(Qtde)) %>%
+  arrange(desc(Qtde))
+df_obitos_escol_2022['Percentual'] = round((df_obitos_escol_2022$Qtde/sum(df_obitos_escol_2022$Qtde))* 100,1)
+df_obitos_escol_2022
+
+# Escolaridade 2023
+df_obitos_escol_2023 <- df_obitos_escol %>% 
+  filter(Ano == '2023') %>%
+  group_by(Label) %>% 
+  summarise(Qtde=sum(Qtde)) %>%
+  arrange(desc(Qtde))
+df_obitos_escol_2023['Percentual'] = round((df_obitos_escol_2023$Qtde/sum(df_obitos_escol_2023$Qtde))* 100,1)
+df_obitos_escol_2023
 
 # Etnia (Raca/cor)
-df_obitos_etnia <- as.data.frame(table(df_obitos$CS_RACA)) %>% arrange(desc(Freq))
-df_obitos_etnia <- setNames(df_obitos_etnia, c("Raca", "Qtde"))
+df_obitos_etnia <- as.data.frame(table(df_obitos$ANO_EVOLUCA,df_obitos$CS_RACA)) %>% arrange(desc(Var1),desc(Freq))
+df_obitos_etnia <- setNames(df_obitos_etnia, c("Ano","Raca", "Qtde"))
 df_obitos_etnia['Label'] <- ifelse(df_obitos_etnia$Raca == 1, "Branca",
                            ifelse(df_obitos_etnia$Raca == 2, "Preta", 
                            ifelse(df_obitos_etnia$Raca == 3, "Amarela",
@@ -230,8 +294,41 @@ df_obitos_etnia['Label'] <- ifelse(df_obitos_etnia$Raca == 1, "Branca",
                            ifelse(df_obitos_etnia$Raca == 5, "Indígena",
                            ifelse(df_obitos_etnia$Raca == 9, "Ignorado", "Ignorado"))))))
 
-df_obitos_etnia['Percentual'] <- round(df_obitos_etnia$Qtde / sum(df_obitos_etnia$Qtde) * 100,1)
-df_obitos_etnia
+
+
+# Etnia Geral
+df_obitos_etnia_geral <- df_obitos_etnia %>% group_by(Label) %>% 
+  summarise(Qtde=sum(Qtde)) %>%
+  arrange(desc(Qtde))
+df_obitos_etnia_geral['Percentual'] <- round(df_obitos_etnia_geral$Qtde / sum(df_obitos_etnia_geral$Qtde) * 100,1)
+df_obitos_etnia_geral
+
+# Etnia 2021
+df_obitos_etnia_2021 <- df_obitos_etnia %>% 
+  filter(Ano == '2021') %>%
+  group_by(Label) %>% 
+  summarise(Qtde=sum(Qtde)) %>%
+  arrange(desc(Qtde))
+df_obitos_etnia_2021['Percentual'] = round((df_obitos_etnia_2021$Qtde/sum(df_obitos_etnia_2021$Qtde))* 100,1)
+df_obitos_etnia_2021
+
+# Etnia 2022
+df_obitos_etnia_2022 <- df_obitos_etnia %>% 
+  filter(Ano == '2022') %>%
+  group_by(Label) %>% 
+  summarise(Qtde=sum(Qtde)) %>%
+  arrange(desc(Qtde))
+df_obitos_etnia_2022['Percentual'] = round((df_obitos_etnia_2022$Qtde/sum(df_obitos_etnia_2022$Qtde))* 100,1)
+df_obitos_etnia_2022
+
+# Etnia 2023
+df_obitos_etnia_2023 <- df_obitos_etnia %>% 
+  filter(Ano == '2023') %>%
+  group_by(Label) %>% 
+  summarise(Qtde=sum(Qtde)) %>%
+  arrange(desc(Qtde))
+df_obitos_etnia_2023['Percentual'] = round((df_obitos_etnia_2023$Qtde/sum(df_obitos_etnia_2023$Qtde))* 100,1)
+df_obitos_etnia_2023
 
 #########################
 
