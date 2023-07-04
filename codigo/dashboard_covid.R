@@ -325,14 +325,6 @@ obitos <- num_obitos %>%
                 media_movel_30=rollmean(Qtde, k = 30, fill = NA),
                 media_movel_45=rollmean(Qtde, k = 30, fill = NA))
 
-
-
 ggplot(obitos, aes(x=Data, Qtde))+
   geom_col()+ geom_line(aes)
   
-obitos
-
- num_obitos1
-
-                str(df_covid_obitos)
-
