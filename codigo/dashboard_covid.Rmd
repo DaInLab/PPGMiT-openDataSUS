@@ -108,6 +108,18 @@ df_obitos_escol['Label'] <- ifelse(df_obitos_escol$Escolaridade == 0, "Sem Escol
                                   ifelse(df_obitos_escol$Escolaridade == 4, "Ensino Superior", "Ignorado")))))
 df_obitos_escol['Percentual'] <- round(df_obitos_escol$Qtde / sum(df_obitos_escol$Qtde) * 100,1)
 
+# Etnia (Raca/cor)
+df_obitos_etnia <- as.data.frame(table(df_obitos$CS_RACA)) %>% arrange(desc(Freq))
+df_obitos_etnia <- setNames(df_obitos_etnia, c("Raca", "Qtde"))
+df_obitos_etnia['Label'] <- ifelse(df_obitos_etnia$Raca == 1, "Branca",
+                           ifelse(df_obitos_etnia$Raca == 2, "Preta", 
+                           ifelse(df_obitos_etnia$Raca == 3, "Amarela",
+                           ifelse(df_obitos_etnia$Raca == 4, "Parda",
+                           ifelse(df_obitos_etnia$Raca == 5, "Indígena",
+                           ifelse(df_obitos_etnia$Raca == 9, "Ignorado", "Ignorado"))))))
+
+df_obitos_etnia['Percentual'] <- round(df_obitos_etnia$Qtde / sum(df_obitos_etnia$Qtde) * 100,1)
+
 
 ```
 
@@ -171,6 +183,14 @@ valueBox(df_obitos_sexo$Label[1], caption = "Sexo", color="gray")
 valueBox(df_obitos_escol$Label[1], caption = "Escolaridade", color="gray")
 
 ```
+
+### {.no-title}
+
+```{r}
+valueBox(df_obitos_etnia$Label[1], caption = "Etnia", color="orange")
+
+```
+
 
 2021
 ===
@@ -277,7 +297,7 @@ valueBox(paste(media_idade_obitos_2021, ' anos'), caption = "Média Idade Óbito
 ### {.no-title}
 
 ```{r}
-valueBox('Diabetes Mellitus', caption = "Principal Fator de Risco - Óbitos", color="brown")
+valueBox('--', caption = "Principal Fator de Risco - Óbitos", color="brown")
 
 ```
 
@@ -285,7 +305,7 @@ valueBox('Diabetes Mellitus', caption = "Principal Fator de Risco - Óbitos", co
 ### {.no-title}
 
 ```{r}
-valueBox('Dor de Garganta', caption = "Principal Sinal ou Sintoma - Óbitos", color="orange")
+valueBox('--', caption = "Principal Sinal ou Sintoma - Óbitos", color="orange")
 
 ```
 
@@ -293,14 +313,14 @@ valueBox('Dor de Garganta', caption = "Principal Sinal ou Sintoma - Óbitos", co
 ### {.no-title}
 
 ```{r}
-valueBox('Masculino', caption = "Sexo", color="gray")
+valueBox('--', caption = "Sexo", color="gray")
 
 ```
 
 ### {.no-title}
 
 ```{r}
-valueBox('Superior', caption = "Escolaridade", color="gray")
+valueBox('--', caption = "Escolaridade", color="gray")
 
 ```
 
@@ -321,24 +341,24 @@ valueBox(format(num_notificacoes_2022, big.mark = ".") , caption = "Notificaçõ
 ### Obitos {.no-title}
 
 ```{r}
-gauge(55, min = 0, max = 100, symbol = '%', label="Obitos %", gaugeSectors(
-  success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
+#gauge(55, min = 0, max = 100, symbol = '%', label="Obitos %", gaugeSectors(
+ # success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
 
 ```
 
 ### Óbitos Outras Doenças {.no-title}
 
 ```{r}
-gauge(13, min = 0, max = 100, symbol = '%', label="Óbitos Outras Doenças",gaugeSectors(
-  success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
+#gauge(13, min = 0, max = 100, symbol = '%', label="Óbitos Outras Doenças",gaugeSectors(
+ # success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
 
 ```
 
 ### Cura {.no-title}
 
 ```{r}
-gauge(30, min = 0, max = 100, symbol = '%', label="Cura %", gaugeSectors(
-  success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
+#gauge(30, min = 0, max = 100, symbol = '%', label="Cura %", gaugeSectors(
+ # success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
 
 ```
 
@@ -346,8 +366,8 @@ gauge(30, min = 0, max = 100, symbol = '%', label="Cura %", gaugeSectors(
 ### Sem Informação {.no-title}
 
 ```{r}
-gauge(2, min = 0, max = 100, symbol = '%', label= "Sem Informação", gaugeSectors(
-  success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
+#gauge(2, min = 0, max = 100, symbol = '%', label= "Sem Informação", gaugeSectors(
+ # success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
 
 ```
 
@@ -410,28 +430,28 @@ valueBox(paste(media_idade_obitos_2022, ' anos'), caption = "Média Idade Óbito
 ### {.no-title}
 
 ```{r}
-valueBox('Diabetes Mellitus', caption = "Principal Fator de Risco - Óbitos", color="brown")
+valueBox('--', caption = "Principal Fator de Risco - Óbitos", color="brown")
 
 ```
 
 ### {.no-title}
 
 ```{r}
-valueBox('Dor de Garganta', caption = "Principal Sinal ou Sintoma - Óbitos", color="orange")
+valueBox('--', caption = "Principal Sinal ou Sintoma - Óbitos", color="orange")
 
 ```
 
 ### {.no-title}
 
 ```{r}
-valueBox('Masculino', caption = "Sexo", color="gray")
+valueBox('--', caption = "Sexo", color="gray")
 
 ```
 
 ### {.no-title}
 
 ```{r}
-valueBox('Superior', caption = "Escolaridade", color="gray")
+valueBox('--', caption = "Escolaridade", color="gray")
 
 ```
 
@@ -452,24 +472,24 @@ valueBox(format(num_notificacoes_2023, big.mark = ".") , caption = "Notificaçõ
 ### Obitos {.no-title}
 
 ```{r}
-gauge(55, min = 0, max = 100, symbol = '%', label="Obitos %", gaugeSectors(
-  success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
+#gauge(55, min = 0, max = 100, symbol = '%', label="Obitos %", gaugeSectors(
+#  success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
 
 ```
 
 ### Óbitos Outras Doenças {.no-title}
 
 ```{r}
-gauge(13, min = 0, max = 100, symbol = '%', label="Óbitos Outras Doenças",gaugeSectors(
-  success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
+#gauge(13, min = 0, max = 100, symbol = '%', label="Óbitos Outras Doenças",gaugeSectors(
+ # success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
 
 ```
 
 ### Cura {.no-title}
 
 ```{r}
-gauge(30, min = 0, max = 100, symbol = '%', label="Cura %", gaugeSectors(
-  success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
+#gauge(30, min = 0, max = 100, symbol = '%', label="Cura %", gaugeSectors(
+ # success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
 
 ```
 
@@ -477,8 +497,8 @@ gauge(30, min = 0, max = 100, symbol = '%', label="Cura %", gaugeSectors(
 ### Sem Informação {.no-title}
 
 ```{r}
-gauge(2, min = 0, max = 100, symbol = '%', label= "Sem Informação", gaugeSectors(
-  success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
+#gauge(2, min = 0, max = 100, symbol = '%', label= "Sem Informação", gaugeSectors(
+ # success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
 
 ```
 
@@ -541,27 +561,27 @@ valueBox(paste(media_idade_obitos_2023, ' anos'), caption = "Média Idade Óbito
 ### {.no-title}
 
 ```{r}
-valueBox('Diabetes Mellitus', caption = "Principal Fator de Risco - Óbitos", color="brown")
+valueBox('--', caption = "Principal Fator de Risco - Óbitos", color="brown")
 
 ```
 
 ### {.no-title}
 
 ```{r}
-valueBox('Dor de Garganta', caption = "Principal Sinal ou Sintoma - Óbitos", color="orange")
+valueBox('--', caption = "Principal Sinal ou Sintoma - Óbitos", color="orange")
 
 ```
 
 ### {.no-title}
 
 ```{r}
-valueBox('Masculino', caption = "Sexo", color="gray")
+valueBox('--', caption = "Sexo", color="gray")
 
 ```
 
 ### {.no-title}
 
 ```{r}
-valueBox('Superior', caption = "Escolaridade", color="gray")
+valueBox('--', caption = "Escolaridade", color="gray")
 
 ```

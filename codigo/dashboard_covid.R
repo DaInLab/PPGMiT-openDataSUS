@@ -220,6 +220,18 @@ df_obitos_escol['Label'] <- ifelse(df_obitos_escol$Escolaridade == 0, "Sem Escol
 df_obitos_escol['Percentual'] <- round(df_obitos_escol$Qtde / sum(df_obitos_escol$Qtde) * 100,1)
 df_obitos_escol
 
+# Etnia (Raca/cor)
+df_obitos_etnia <- as.data.frame(table(df_obitos$CS_RACA)) %>% arrange(desc(Freq))
+df_obitos_etnia <- setNames(df_obitos_etnia, c("Raca", "Qtde"))
+df_obitos_etnia['Label'] <- ifelse(df_obitos_etnia$Raca == 1, "Branca",
+                           ifelse(df_obitos_etnia$Raca == 2, "Preta", 
+                           ifelse(df_obitos_etnia$Raca == 3, "Amarela",
+                           ifelse(df_obitos_etnia$Raca == 4, "Parda",
+                           ifelse(df_obitos_etnia$Raca == 5, "Indígena",
+                           ifelse(df_obitos_etnia$Raca == 9, "Ignorado", "Ignorado"))))))
+
+df_obitos_etnia['Percentual'] <- round(df_obitos_etnia$Qtde / sum(df_obitos_etnia$Qtde) * 100,1)
+df_obitos_etnia
 
 
 # Verificacao de Todas as variaveis
