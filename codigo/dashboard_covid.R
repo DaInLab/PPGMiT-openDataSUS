@@ -16,7 +16,7 @@ if (!("readr") %in% installed.packages()) install.packages("readr")
 if (!("geobr") %in% installed.packages()) install.packages("geobr")
 if (!("scales") %in% installed.packages()) install.packages("scales")
 if (!("ggspatial") %in% installed.packages()) install.packages("ggspatial")
-install.packages("zoo")
+if (!("zoo") %in% installed.packages()) install.packages("zoo")
 
 library(ggplot2) # visualizacao dos dados
 library(dplyr)   # preparacao dos dados
@@ -152,67 +152,73 @@ df_covid_2023 <- df_covid %>% filter(ANO_EVOLUCA == "2023")
 #   
 # Filtros : 80- Evolucaçao do caso    (2-Óbito) no dataframe df_covid
 #           
-df_covid_obitos <- df_covid %>% filter(EVOLUCAO == "2")
+df_obitos <- df_covid %>% filter(EVOLUCAO == "2")
 
 # # Criando arquivo do dataframe df_covid_obitos (Classificacao Final : SRAG por COVID-19 e Evolucao do Caso : Obito)
-write_csv2(df_covid_obitos, file='./dados/COVID_OBITOS.csv')
+write_csv2(df_obitos, file='./dados/COVID_OBITOS.csv')
 
 # Dataframe : df_covid_obitos_2021
-df_covid_obitos_2021 <- df_covid_obitos %>% filter(ANO_EVOLUCA == "2021")
+df_obitos_2021 <- df_obitos %>% filter(ANO_EVOLUCA == "2021")
 
 # Dataframe : df_covid_obitos_2022
-df_covid_obitos_2022 <- df_covid_obitos %>% filter(ANO_EVOLUCA == "2022")
+df_obitos_2022 <- df_obitos %>% filter(ANO_EVOLUCA == "2022")
 
 # Dataframe : df_covid_obitos_2023
-df_covid_obitos_2023 <- df_covid_obitos %>% filter(ANO_EVOLUCA == "2023")
+df_obitos_2023 <- df_obitos %>% filter(ANO_EVOLUCA == "2023")
 
 # Numero Total de Notificacoes COVID
 num_notificacoes <- as.numeric(count(df_covid))
 num_notificacoes # 1.327.358
 
-num_notificacoes_ano <- aggregate(df_covid$ANO_NOTIFIC,by=list(df_covid$ANO_NOTIFIC), FUN=length)
-num_notificacoes_ano <- setNames(num_notificacoes_ano, c("Ano", "Qtde"))
-num_notificacoes_ano
+df_notificacoes_ano <- aggregate(df_covid$ANO_NOTIFIC,by=list(df_covid$ANO_NOTIFIC), FUN=length)
+df_notificacoes_ano <- setNames(df_notificacoes_ano, c("Ano", "Qtde"))
+df_notificacoes_ano
 
 # 2021
-num_notificacoes_2021 <- as.numeric(count(df_covid_2021))
+num_notificacoes_2021 <- as.numeric(df_notificacoes_ano$Qtde[df_notificacoes_ano$Ano == '2021'])
 # 2022
-num_notificacoes_2022 <- as.numeric(count(df_covid_2022))
+num_notificacoes_2022 <- as.numeric(df_notificacoes_ano$Qtde[df_notificacoes_ano$Ano == '2022'])
 # 2023
-num_notificacoes_2023 <- as.numeric(count(df_covid_2023))
+num_notificacoes_2023 <- as.numeric(df_notificacoes_ano$Qtde[df_notificacoes_ano$Ano == '2023'])
 
 # Numero Total de Obitos COVID
-num_obitos <- as.numeric(count(df_covid_obitos))
+num_obitos <- as.numeric(count(df_obitos))
 num_obitos # 444.951
 
-num_obitos_2021 <- as.numeric(count(df_covid_obitos_2021))
+num_obitos_2021 <- as.numeric(count(df_obitos_2021))
 num_obitos_2021 # 375.209
 
-num_obitos_2022 <- as.numeric(count(df_covid_obitos_2022))
+num_obitos_2022 <- as.numeric(count(df_obitos_2022))
 num_obitos_2022 # 63.919
 
 # 2023
-num_obitos_2023 <- as.numeric(count(df_covid_obitos_2023))
+num_obitos_2023 <- as.numeric(count(df_obitos_2023))
 num_obitos_2023 # 5823
 
 
 # Media Idade Obitos
-media_idade_obitos <- round(mean(df_covid_obitos$NU_IDADE_N))
-media_idade_obitos_2021 <- round(mean(df_covid_obitos_2021$NU_IDADE_N))
-media_idade_obitos_2022 <- round(mean(df_covid_obitos_2022$NU_IDADE_N))
-media_idade_obitos_2023 <- round(mean(df_covid_obitos_2023$NU_IDADE_N))
-            
-paste(media_idade_obitos, ' anos')
+media_idade_obitos <- round(mean(df_obitos$NU_IDADE_N),1)
+media_idade_obitos_2021 <- round(mean(df_obitos_2021$NU_IDADE_N),1)
+media_idade_obitos_2022 <- round(mean(df_obitos_2022$NU_IDADE_N),1)
+media_idade_obitos_2023 <- round(mean(df_obitos_2023$NU_IDADE_N),1)
 
+# Sexo
+df_obitos_sexo <- as.data.frame(table(df_obitos$CS_SEXO)) %>% arrange(desc(Freq))
+df_obitos_sexo <- setNames(df_obitos_sexo, c("Sexo", "Qtde"))
+df_obitos_sexo['Label'] <- ifelse(df_obitos_sexo$Sexo == "M", "Masculino",ifelse(df_obitos_sexo$Sexo == "F", "Feminino", "Indefinido" ))
+df_obitos_sexo['Percentual'] <- round(df_obitos_sexo$Qtde / sum(df_obitos_sexo$Qtde) * 100,1)
+df_obitos_sexo
 
-
-
-
-
-
-
-
-
+# Escolaridade
+df_obitos_escol <- as.data.frame(table(df_obitos$CS_ESCOL_N)) %>% arrange(desc(Freq))
+df_obitos_escol <- setNames(df_obitos_escol, c("Escolaridade", "Qtde"))
+df_obitos_escol['Label'] <- ifelse(df_obitos_escol$Escolaridade == 0, "Sem Escolaridade",
+                                  ifelse(df_obitos_escol$Escolaridade == 1, "Ensino Fundamental (1o Ciclo)", 
+                                  ifelse(df_obitos_escol$Escolaridade == 2, "Ensino Fundamental (2o Ciclo)",
+                                  ifelse(df_obitos_escol$Escolaridade == 3, "Ensino Médio",
+                                  ifelse(df_obitos_escol$Escolaridade == 4, "Ensino Superior", "Ignorado")))))
+df_obitos_escol['Percentual'] <- round(df_obitos_escol$Qtde / sum(df_obitos_escol$Qtde) * 100,1)
+df_obitos_escol
 
 
 
