@@ -16,7 +16,7 @@ runtime: shyni
 }
 .value-box .caption {
     color: white;
-    font: 10;
+    font: 9;
 }
 </style>
 
@@ -132,25 +132,17 @@ Column {data-height=200; data-width=180}
 ### Numero Notificações COVID-19 {.no-title}
 
 ```{r}
-
-
 valueBox(format(num_notificacoes, big.mark = ".") , caption = "Notificações COVID-19", color="black")
-
-
 ```
 
 
 ### Numero Notificações COVID-19 {.no-title}
 
 ```{r}
-
 df_notificacoes_ano %>%
   kable("html", escape = F) %>%
   kable_styling("striped", full_width = F)
-
 ```
-
-
 
 
 Column {data-height=200; data-width=250}
@@ -159,35 +151,35 @@ Column {data-height=200; data-width=250}
 ### {.no-title}
 
 ```{r}
-valueBox(format(num_obitos, big.mark = "."), caption = "Numero Óbitos", color="red")
+valueBox(format(num_obitos, big.mark = "."), caption = "Óbitos", color="red")
 
 ```
 
 ### {.no-title}
 
 ```{r}
-valueBox(paste(media_idade_obitos, ' anos'), caption = "Média Idade Óbitos", color="blue")
+valueBox(paste(media_idade_obitos, ' anos'), caption = "Média Idade", color="gray")
 
 ```
 
 ### {.no-title}
 
 ```{r}
-valueBox(df_obitos_sexo$Label[1], caption = "Sexo", color="gray")
+valueBox(paste(df_obitos_sexo$Label[1],' - ', format(df_obitos_sexo$Percentual[1]), '%'), caption = "Sexo", color="blue")
 
 ```
 
 ### {.no-title}
 
 ```{r}
-valueBox(df_obitos_escol$Label[1], caption = "Escolaridade", color="gray")
+valueBox(df_obitos_escol$Label[1], caption = "Escolaridade", color="green")
 
 ```
 
 ### {.no-title}
 
 ```{r}
-valueBox(df_obitos_etnia$Label[1], caption = "Etnia", color="orange")
+valueBox(paste(df_obitos_etnia$Label[1], ' - ', format(df_obitos_etnia$Percentual[1]), '%'), caption = "Etnia", color="orange")
 
 ```
 
@@ -284,13 +276,13 @@ Column {data-height=200; data-width=250}
 ### {.no-title}
 
 ```{r}
-valueBox(format(num_obitos_2021, big.mark = "."), caption = "Numero Óbitos", color="red")
+valueBox(format(num_obitos_2021, big.mark = "."), caption = "Óbitos", color="red")
 
 ```
 ### {.no-title}
 
 ```{r}
-valueBox(paste(media_idade_obitos_2021, ' anos'), caption = "Média Idade Óbitos", color="blue")
+valueBox(paste(media_idade_obitos_2021, ' anos'), caption = "Média Idade", color="gray")
 
 ```
 
@@ -313,14 +305,14 @@ valueBox('--', caption = "Principal Sinal ou Sintoma - Óbitos", color="orange")
 ### {.no-title}
 
 ```{r}
-valueBox('--', caption = "Sexo", color="gray")
+valueBox('--', caption = "Sexo", color="blue")
 
 ```
 
 ### {.no-title}
 
 ```{r}
-valueBox('--', caption = "Escolaridade", color="gray")
+valueBox('--', caption = "Escolaridade", color="green")
 
 ```
 
@@ -416,14 +408,14 @@ Column {data-height=200; data-width=250}
 ### {.no-title}
 
 ```{r}
-valueBox(valueBox(format(num_obitos_2022, big.mark = "."), caption = "Numero Óbitos", color="red"), caption = "Numero Óbitos", color="red")
+valueBox(valueBox(format(num_obitos_2022, big.mark = "."), caption = "Óbitos", color="red"), caption = "Numero Óbitos", color="red")
 
 ```
 
 ### {.no-title}
 
 ```{r}
-valueBox(paste(media_idade_obitos_2022, ' anos'), caption = "Média Idade Óbitos", color="blue")
+valueBox(paste(media_idade_obitos_2022, ' anos'), caption = "Média Idade", color="gray")
 
 ```
 
@@ -444,14 +436,14 @@ valueBox('--', caption = "Principal Sinal ou Sintoma - Óbitos", color="orange")
 ### {.no-title}
 
 ```{r}
-valueBox('--', caption = "Sexo", color="gray")
+valueBox('--', caption = "Sexo", color="blue")
 
 ```
 
 ### {.no-title}
 
 ```{r}
-valueBox('--', caption = "Escolaridade", color="gray")
+valueBox('--', caption = "Escolaridade", color="green")
 
 ```
 
@@ -547,14 +539,14 @@ Column {data-height=200; data-width=250}
 ### {.no-title}
 
 ```{r}
-valueBox(valueBox(format(num_obitos_2023, big.mark = "."), caption = "Numero Óbitos", color="red"), caption = "Numero Óbitos", color="red")
+valueBox(valueBox(format(num_obitos_2023, big.mark = "."), caption = "Óbitos", color="red"), caption = "Numero Óbitos", color="red")
 
 ```
 
 ### {.no-title}
 
 ```{r}
-valueBox(paste(media_idade_obitos_2023, ' anos'), caption = "Média Idade Óbitos", color="blue")
+valueBox(paste(media_idade_obitos_2023, ' anos'), caption = "Média Idade", color="blue")
 
 ```
 
@@ -575,13 +567,13 @@ valueBox('--', caption = "Principal Sinal ou Sintoma - Óbitos", color="orange")
 ### {.no-title}
 
 ```{r}
-valueBox('--', caption = "Sexo", color="gray")
+valueBox('--', caption = "Sexo", color="blue")
 
 ```
 
 ### {.no-title}
 
 ```{r}
-valueBox('--', caption = "Escolaridade", color="gray")
+valueBox('--', caption = "Escolaridade", color="green")
 
 ```

@@ -233,78 +233,12 @@ df_obitos_etnia['Label'] <- ifelse(df_obitos_etnia$Raca == 1, "Branca",
 df_obitos_etnia['Percentual'] <- round(df_obitos_etnia$Qtde / sum(df_obitos_etnia$Qtde) * 100,1)
 df_obitos_etnia
 
-
-# Verificacao de Todas as variaveis
-
-# ANO_NOTIFIC - Ano Notificacao
-distinct(tbl_df(df_covid$ANO_NOTIFIC))
-# 2021 2022 2023
-
-# ANO_INTERNA - Ano Internacao
-distinct(tbl_df(df_covid$ANO_INTERNA))
-# 2021 NA 2020 2022 2023
-
-# ANO_EVOLUCAO - Ano Evolucao, no caso Ano do Obito
-distinct(tbl_df(df_covid$ANO_EVOLUCA))
-# 2021 NA 2022 2023
-
-# ANO_ENCERRA - Ano Encerramento da Notificacao
-distinct(tbl_df(df_covid$ANO_ENCERRA))
-# 2021 NA 2022 2023
-
-# CLASSI_FIN - Classificacao Final do caso (5-SRAG por COVID-19)
-distinct(tbl_df(df_covid$CLASSI_FIN))
-# 5
-
-# EVOLUC - Evolucaçao do caso    (2-Óbito)
-distinct(tbl_df(df_covid$EVOLUC))
-# 2
-
-# NU_IDADE_N
-distinct(tbl_df(df_covid_obitos$NU_IDADE_N))
-
-# CS_SEXO
-distinct(tbl_df(df_covid_obitos$CS_SEXO))
-# 1 M    
-# 2 F    
-# 3 I  
-
-# CS_GESTANT
-distinct(tbl_df(df_covid_obitos$CS_GESTANT))
-# 1     6
-# 2     5
-# 3     9
-# 4     2
-# 5     3
-# 6     0
-# 7     1
-# 8     4
-
-# CS_ESCOL_N,
-distinct(tbl_df(df_covid_obitos$CS_ESCOL_N))
-# 1     9
-# 2     1
-# 3     0
-# 4    NA
-# 5     4
-# 6     3
-# 7     2
-# 8     5
-
-# CS_RACA
-distinct(tbl_df(df_covid_mortalidade$CS_RACA))
-# 1     4
-# 2     9
-# 3     1
-# 4     2
-# 5     3
-# 6     5
-
+#########################
 
 # Grafico 01_mapa_Obitos_BR
 estado <- read_state(year=2020)
 
-num_obitos_estado <- aggregate(df_covid_obitos$SG_UF_INTE,by=list(df_covid_obitos$SG_UF_INTE), FUN=length)
+num_obitos_estado <- aggregate(df_obitos$SG_UF_INTE,by=list(df_obitos$SG_UF_INTE), FUN=length)
 num_obitos_estado <- setNames(num_obitos_estado, c("abbrev_state", "Qtde"))
 num_obitos_estado
 
@@ -324,9 +258,9 @@ ggplot()+
   annotation_north_arrow(location='tl')
 
 # Grafico 02_idades_obitos
-summary(df_covid_obitos$NU_IDADE_N)
+summary(df_obitos$NU_IDADE_N)
 
-df_covid_obitos %>% 
+df_obitos %>% 
   ggplot(aes(x = NU_IDADE_N)) +
   geom_histogram()
 
