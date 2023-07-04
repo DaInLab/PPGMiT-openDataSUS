@@ -47,18 +47,46 @@ library(flexdashboard)
 library(knitr)
 library(kableExtra)
 
-
-# Importacao do arquivo : opendatasus_covid.csv
+# Importacao do arquivo : covid.csv
 df_covid<- read.csv('D:/GoogleDrive/Mestrado/PPGMiT-openDataSUS/dados/covid.csv', sep=";")
+
+# Dataframe : df_covid_2021
+df_covid_2021 <- df_covid %>% filter(ANO_EVOLUCA == "2021")
+# Dataframe : df_covid_2022
+df_covid_2022 <- df_covid %>% filter(ANO_EVOLUCA == "2022")
+# Dataframe : df_covid_2023
+df_covid_2023 <- df_covid %>% filter(ANO_EVOLUCA == "2023")
 
 # Numero Notificacoes 
 num_notificacoes <- as.numeric(count(df_covid))
 num_notificacoes_ano <- aggregate(df_covid$ANO_NOTIFIC,by=list(df_covid$ANO_NOTIFIC), FUN=length)
 num_notificacoes_ano <- setNames(num_notificacoes_ano, c("Ano", "Notificações"))
-
 num_notificacoes_2021 <- as.numeric(num_notificacoes_ano[num_notificacoes_ano$Ano == "2021",2])
 num_notificacoes_2022 <- as.numeric(num_notificacoes_ano[num_notificacoes_ano$Ano == "2022",2])
 num_notificacoes_2023 <- as.numeric(num_notificacoes_ano[num_notificacoes_ano$Ano == "2023",2])
+
+# Importacao do arquivo : covid_obitos.csv
+df_covid_obitos<- read.csv('D:/GoogleDrive/Mestrado/PPGMiT-openDataSUS/dados/covid_obitos.csv', sep=";")
+
+# Dataframe : df_covid_obitos_2021
+df_covid_obitos_2021 <- df_covid_obitos %>% filter(ANO_EVOLUCA == "2021")
+# Dataframe : df_covid_obitos_2022
+df_covid_obitos_2022 <- df_covid_obitos %>% filter(ANO_EVOLUCA == "2022")
+# Dataframe : df_covid_obitos_2023
+df_covid_obitos_2023 <- df_covid_obitos %>% filter(ANO_EVOLUCA == "2023")
+
+# Numero Obitos
+num_obitos <- as.numeric(count(df_covid_obitos))
+num_obitos_2021 <- as.numeric(count(df_covid_obitos_2021))
+num_obitos_2022 <- as.numeric(count(df_covid_obitos_2022))
+num_obitos_2023 <- as.numeric(count(df_covid_obitos_2023))
+
+# Media Idade Obitos
+media_idade_obitos <- round(mean(df_covid_obitos$NU_IDADE_N))
+media_idade_obitos_2021 <- round(mean(df_covid_obitos_2021$NU_IDADE_N))
+media_idade_obitos_2022 <- round(mean(df_covid_obitos_2022$NU_IDADE_N))
+media_idade_obitos_2023 <- round(mean(df_covid_obitos_2023$NU_IDADE_N))
+
 
 ```
 
@@ -88,8 +116,6 @@ num_notificacoes_ano %>%
   kable("html", escape = F) %>%
   kable_styling("striped", full_width = F)
 
-#valueBox(format(num_notificacoes, big.mark = ".") , caption = "Notificações COVID-19", color="black")
-
 ```
 
 
@@ -97,24 +123,24 @@ num_notificacoes_ano %>%
 ### Obitos {.no-title}
 
 ```{r}
-gauge(55, min = 0, max = 100, symbol = '%', label="Obitos %", gaugeSectors(
-  success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
+#gauge(55, min = 0, max = 100, symbol = '%', label="Obitos %", gaugeSectors(
+ # success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
 
 ```
 
 ### Óbitos Outras Doenças {.no-title}
 
 ```{r}
-gauge(13, min = 0, max = 100, symbol = '%', label="Óbitos Outras Doenças",gaugeSectors(
-  success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
+#gauge(13, min = 0, max = 100, symbol = '%', label="Óbitos Outras Doenças",gaugeSectors(
+ # success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
 
 ```
 
 ### Cura {.no-title}
 
 ```{r}
-gauge(30, min = 0, max = 100, symbol = '%', label="Cura %", gaugeSectors(
-  success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
+#gauge(30, min = 0, max = 100, symbol = '%', label="Cura %", gaugeSectors(
+ # success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
 
 ```
 
@@ -122,8 +148,8 @@ gauge(30, min = 0, max = 100, symbol = '%', label="Cura %", gaugeSectors(
 ### Sem Informação {.no-title}
 
 ```{r}
-gauge(2, min = 0, max = 100, symbol = '%', label= "Sem Informação", gaugeSectors(
-  success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
+#gauge(2, min = 0, max = 100, symbol = '%', label= "Sem Informação", gaugeSectors(
+ # success = c(0, 39), warning = c(40, 79), danger = c(80, 100)))
 
 ```
 
@@ -172,7 +198,14 @@ Column {data-height=200; data-width=250}
 ### {.no-title}
 
 ```{r}
-valueBox(0, caption = "Numero Óbitos", color="red")
+valueBox(format(num_obitos, big.mark = "."), caption = "Numero Óbitos", color="red")
+
+```
+
+### {.no-title}
+
+```{r}
+valueBox(paste(media_idade_obitos, ' anos'), caption = "Média Idade Óbitos", color="blue")
 
 ```
 
@@ -191,12 +224,6 @@ valueBox('Dor de Garganta', caption = "Principal Sinal ou Sintoma - Óbitos", co
 
 ```
 
-### {.no-title}
-
-```{r}
-valueBox(46.5, caption = "Média Idade Óbitos", color="blue")
-
-```
 
 ### {.no-title}
 
@@ -305,7 +332,13 @@ Column {data-height=200; data-width=250}
 ### {.no-title}
 
 ```{r}
-valueBox(1007, caption = "Numero Óbitos", color="red")
+valueBox(format(num_obitos_2021, big.mark = "."), caption = "Numero Óbitos", color="red")
+
+```
+### {.no-title}
+
+```{r}
+valueBox(paste(media_idade_obitos_2021, ' anos'), caption = "Média Idade Óbitos", color="blue")
 
 ```
 
@@ -324,12 +357,6 @@ valueBox('Dor de Garganta', caption = "Principal Sinal ou Sintoma - Óbitos", co
 
 ```
 
-### {.no-title}
-
-```{r}
-valueBox(46.5, caption = "Média Idade Óbitos", color="blue")
-
-```
 
 ### {.no-title}
 
@@ -437,7 +464,14 @@ Column {data-height=200; data-width=250}
 ### {.no-title}
 
 ```{r}
-valueBox(150007, caption = "Numero Óbitos", color="red")
+valueBox(valueBox(format(num_obitos_2022, big.mark = "."), caption = "Numero Óbitos", color="red"), caption = "Numero Óbitos", color="red")
+
+```
+
+### {.no-title}
+
+```{r}
+valueBox(paste(media_idade_obitos_2022, ' anos'), caption = "Média Idade Óbitos", color="blue")
 
 ```
 
@@ -448,18 +482,10 @@ valueBox('Diabetes Mellitus', caption = "Principal Fator de Risco - Óbitos", co
 
 ```
 
-
 ### {.no-title}
 
 ```{r}
 valueBox('Dor de Garganta', caption = "Principal Sinal ou Sintoma - Óbitos", color="orange")
-
-```
-
-### {.no-title}
-
-```{r}
-valueBox(46.5, caption = "Média Idade Óbitos", color="blue")
 
 ```
 
@@ -490,7 +516,6 @@ Column {data-height=200; data-width=180}
 valueBox(format(num_notificacoes_2023, big.mark = ".") , caption = "Notificações COVID-19", color="black")
 
 ```
-
 
 ### Obitos {.no-title}
 
@@ -570,7 +595,14 @@ Column {data-height=200; data-width=250}
 ### {.no-title}
 
 ```{r}
-valueBox(150007, caption = "Numero Óbitos", color="red")
+valueBox(valueBox(format(num_obitos_2021, big.mark = "."), caption = "Numero Óbitos", color="red"), caption = "Numero Óbitos", color="red")
+
+```
+
+### {.no-title}
+
+```{r}
+valueBox(paste(media_idade_obitos_2021, ' anos'), caption = "Média Idade Óbitos", color="blue")
 
 ```
 
@@ -581,18 +613,10 @@ valueBox('Diabetes Mellitus', caption = "Principal Fator de Risco - Óbitos", co
 
 ```
 
-
 ### {.no-title}
 
 ```{r}
 valueBox('Dor de Garganta', caption = "Principal Sinal ou Sintoma - Óbitos", color="orange")
-
-```
-
-### {.no-title}
-
-```{r}
-valueBox(46.5, caption = "Média Idade Óbitos", color="blue")
 
 ```
 

@@ -29,7 +29,7 @@ library(zoo) # calcular rollmean
 
 # Dataframe : df_opendatasus
 # Todos os registros do OPENDATASUS (sem filtro)
-# Importacao dos arquivos anuais : INFLUD* 2021, 2022 e 2023 (2.351.198)
+# Importacao dos arquivos anuais : INFLUD* 2021, 2022 e 2023 (2.430.671)
 df_opendatasus<-list.files(path="./dados",pattern="INFLUD", full.names = TRUE) %>%
   lapply(read.csv,stringsAsFactors=F, sep=';') %>%
   bind_rows
@@ -46,7 +46,7 @@ df_opendatasus['ANO_EVOLUCA'] <- year(df_opendatasus$DT_EVOLUCA)
 df_opendatasus['ANO_INTERNA'] <- year(df_opendatasus$DT_INTERNA)
 df_opendatasus['ANO_ENCERRA'] <- year(df_opendatasus$DT_ENCERRA)
 
-# Dataframe : df_covid
+# Dataframe : df_covid (1.327.358 - 55 variaveis)
 # Variaveis que serao utilizadas :
 #   Periodo - Ano
 #   Classificacao e Evolucao
@@ -126,11 +126,22 @@ df_covid <- df_opendatasus %>% select(
 )  %>% filter((ANO_NOTIFIC == "2021" | ANO_NOTIFIC == "2022" | ANO_NOTIFIC == "2023"),
               (ANO_EVOLUCA == "2021" | ANO_EVOLUCA == "2022" | ANO_EVOLUCA == "2023"),
               CLASSI_FIN == "5")   %>% arrange(DT_NOTIFIC)
-
 # Liberar memoria
 rm(df_opendatasus)
 
-# Dataframe : df_covid_obitos
+# Criando arquivo do dataframe df_covid (Classificacao Final : SRAG por COVID-19)
+write_csv2(df_covid, file='./dados/COVID.csv')
+
+# Dataframe : df_covid_2021
+df_covid_2021 <- df_covid %>% filter(ANO_EVOLUCA == "2021")
+
+# Dataframe : df_covid_2022
+df_covid_2022 <- df_covid %>% filter(ANO_EVOLUCA == "2022")
+
+# Dataframe : df_covid_2023
+df_covid_2023 <- df_covid %>% filter(ANO_EVOLUCA == "2023")
+
+# Dataframe : df_covid_obitos (444.951 - 55 variaveis)
 # Variaveis que serao utilizadas :
 #   Periodo - Ano
 #   Classificacao e Evolucao
@@ -141,36 +152,68 @@ rm(df_opendatasus)
 #   
 # Filtros : 80- Evolucaçao do caso    (2-Óbito) no dataframe df_covid
 #           
-# 442.890 obs - 51 variaveis
-
 df_covid_obitos <- df_covid %>% filter(EVOLUCAO == "2")
-
-
-# Criando arquivo do dataframe df_covid (Classificacao Final : SRAG por COVID-19)
-write_csv2(df_covid, file='./dados/COVID.csv')
 
 # # Criando arquivo do dataframe df_covid_obitos (Classificacao Final : SRAG por COVID-19 e Evolucao do Caso : Obito)
 write_csv2(df_covid_obitos, file='./dados/COVID_OBITOS.csv')
 
+# Dataframe : df_covid_obitos_2021
+df_covid_obitos_2021 <- df_covid_obitos %>% filter(ANO_EVOLUCA == "2021")
+
+# Dataframe : df_covid_obitos_2022
+df_covid_obitos_2022 <- df_covid_obitos %>% filter(ANO_EVOLUCA == "2022")
+
+# Dataframe : df_covid_obitos_2023
+df_covid_obitos_2023 <- df_covid_obitos %>% filter(ANO_EVOLUCA == "2023")
+
 # Numero Total de Notificacoes COVID
 num_notificacoes <- as.numeric(count(df_covid))
-num_notificacoes # 1318333
+num_notificacoes # 1.327.358
 
 num_notificacoes_ano <- aggregate(df_covid$ANO_NOTIFIC,by=list(df_covid$ANO_NOTIFIC), FUN=length)
 num_notificacoes_ano <- setNames(num_notificacoes_ano, c("Ano", "Qtde"))
 num_notificacoes_ano
 
 # 2021
-num_notificacoes_2021 <- as.numeric(num_notificacoes_ano[num_notificacoes_ano$Ano == "2021",2])
-num_notificacoes_2021 # 1703789
-
+num_notificacoes_2021 <- as.numeric(count(df_covid_2021))
 # 2022
-num_notificacoes_2022 <- as.numeric(num_notificacoes_ano[num_notificacoes_ano$Ano == "2022",2])
-num_notificacoes_2022 # 579161
+num_notificacoes_2022 <- as.numeric(count(df_covid_2022))
+# 2023
+num_notificacoes_2023 <- as.numeric(count(df_covid_2023))
+
+# Numero Total de Obitos COVID
+num_obitos <- as.numeric(count(df_covid_obitos))
+num_obitos # 444.951
+
+num_obitos_2021 <- as.numeric(count(df_covid_obitos_2021))
+num_obitos_2021 # 375.209
+
+num_obitos_2022 <- as.numeric(count(df_covid_obitos_2022))
+num_obitos_2022 # 63.919
 
 # 2023
-num_notificacoes_2023 <- as.numeric(num_notificacoes_ano[num_notificacoes_ano$Ano == "2023",2])
-num_notificacoes_2023 # 68243
+num_obitos_2023 <- as.numeric(count(df_covid_obitos_2023))
+num_obitos_2023 # 5823
+
+
+# Media Idade Obitos
+media_idade_obitos <- round(mean(df_covid_obitos$NU_IDADE_N))
+media_idade_obitos_2021 <- round(mean(df_covid_obitos_2021$NU_IDADE_N))
+media_idade_obitos_2022 <- round(mean(df_covid_obitos_2022$NU_IDADE_N))
+media_idade_obitos_2023 <- round(mean(df_covid_obitos_2023$NU_IDADE_N))
+            
+paste(media_idade_obitos, ' anos')
+
+
+
+
+
+
+
+
+
+
+
 
 
 # Verificacao de Todas as variaveis
