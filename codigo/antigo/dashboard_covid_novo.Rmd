@@ -1,0 +1,174 @@
+---
+title: "Dashboard Óbitos COVID-19 no Brasil"
+runtime: shiny
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+    source_code: embed
+    navbar:
+      - { title: "Sobre Mim", href: "https://www.linkedin.com/in/marcelo-j-santos/", align: right }
+      - { icon: fa-address-card, href: "https://example.com/about", align: right }
+---
+
+# Homepage
+
+## Column {data-width=500}
+
+### Introduction
+<font size = "5">Please read user manual before exploring this dashboard. You can find user manual by clicking <a href="file:///C:/Users/Filip/Desktop/Dashboard%20guide.htm" target=_blank>here</a></font><br><br><br>
+
+### Introduction 2
+<font size = "5">Please read user manual before exploring this dashboard. You can find user manual by clicking the following icon</font><br><br><br>
+```{r}
+# knitr::include_graphics("")
+```
+
+
+```{r setup, include=FALSE}
+#knitr::opts_knit$set(root.dir = getwd())
+
+# Diretorio da Trabalho
+setwd(file.path("d:", "GoogleDrive","Mestrado","PPGMiT-openDataSUS"))
+
+# Carregando as bibliotecas necessárias
+
+if (!("flexdashboard") %in% installed.packages()) install.packages("flexdashboard")   
+if (!("dplyr") %in% installed.packages()) install.packages("dplyr")
+if (!("shiny") %in% installed.packages()) install.packages("shiny")
+if (!("shinydashboard") %in% installed.packages()) install.packages("shinydashboard")
+
+#if (!("readr") %in% installed.packages()) install.packages("readr")
+#if (!("geobr") %in% installed.packages()) install.packages("geobr")
+#if (!("scales") %in% installed.packages()) install.packages("scales")
+#if (!("ggspatial") %in% installed.packages()) install.packages("ggspatial")
+#if (!("kableExtra") %in% installed.packages()) install.packages("kableExtra")
+#if (!("knitr") %in% installed.packages()) install.packages("knitr")
+
+library(flexdashboard)
+library(dplyr)
+library(shiny)
+library(shinydashboard)
+library("devtools")
+
+#library(ggplot2)
+#library(readr)
+#library(lubridate)
+
+#library(stringr)
+#library(forcats)
+#library(tidyr)
+#library(scales)
+##library(ggtext)
+##library(tsibble)
+#library(fabletools)
+#library(feasts)
+#library(Hmisc)
+
+#library(ggplot2) # Visualizacao dos dados
+#library(dplyr)   # Preparacao de dados
+#library(readr)   # Importacao dos dados
+#library(geobr)   # Mapa do Brasil
+#library(scales)
+#library(ggspatial)
+#library(flexdashboard)
+#library(knitr)
+#library(kableExtra)
+
+# Importacao do arquivo municipios.csv
+df_municipios <- read.csv('./dados/municipios.csv', sep=";") %>% arrange(ID_MUNICIP)
+
+# Importacao do arquivo : covid.csv
+#df_covid_obitos <- read.csv('D:/GoogleDrive/Mestrado/PPGMIT_novo_dashboard/dados/covid_obitos.csv', sep=";")
+
+# Importacao do arquivo : covid_totais.csv
+#df_covid_totais <- read.csv('D:/GoogleDrive/Mestrado/PPGMIT_novo_dashboard/dados/covid_totais.csv', sep=";")
+
+
+```
+
+Inputs {.sidebar}
+-------------------------------------
+
+
+```{r}
+
+UF <- c('**TODAS**','AC','AL','AM','AP','BA','CE','ES','GO','MA','MG','MS','MT','PA','PB','PE','PI','PR','RJ','RN','RO','RR','RS','SC','SE','SP','TO')
+
+ui <- fluidPage(
+  
+  dateRangeInput("FiltroData", 
+               "Selecione Data:", 
+               min = "2021-01-01", 
+               max = "2023-12-31",
+               start = "2023-06-01",
+               end = "2023-12-31",
+              format = "dd/mm/yyyy",
+              language = "pt-BR",
+              separator = "até",
+              autoclose = TRUE,
+              width="300px",
+               ),
+  
+  selectInput("v1", 
+              label = "Selecione UF:", 
+              choices = UF, selected = "**TODAS**"),
+  
+  selectInput("v2", 
+              label = "Selecione Municipio:", 
+              width="320px",
+              choices = df_municipios$iID_MUNICIP, 
+              selected = "**TODOS**")
+  
+)
+server <- function(input, output, session){
+  observe({
+    if(!is.null(input$v2))
+      updateSelectInput(session, "v1", 
+                        choices = UF, 
+                        selected = isolate(input$v1) )
+  })
+
+  observe({
+    if(!is.null(input$v1))
+      updateSelectInput(session, "v2", 
+                        choices = c('**TODOS**',df_municipios$ID_MUNICIP[df_municipios$SG_UF_NOT==input$v1]), 
+                        selected = isolate(input$v2) )
+                        
+  })
+  
+  r <- reactiveValues(
+    start = lubridate::ymd("2023-06-01"),
+    end = lubridate::ymd("2023-12-31")
+  )
+  
+  observeEvent( input$FiltroData , {
+    start <- (input$FiltroData[[1]])
+    end <- lubridate::ymd(input$FiltroData[[2]])
+    if (start >= end){
+      shinyalert::shinyalert("Data Inválida! Redigite", type = "error")
+      updateDateRangeInput(
+        session, 
+        "FiltroData", 
+        start = r$start,
+        end = r$end
+      )
+    } else {
+      r$start <- input$FiltroData[[1]]
+      r$end <- input$FiltroData[[2]]
+    }
+  }, ignoreInit = TRUE)
+  
+  observeEvent( input$select , {
+      print(input$select)
+  }, ignoreNULL=FALSE)
+
+}
+  
+shinyApp(ui = ui, server = server)
+
+
+```
+
+ 
+

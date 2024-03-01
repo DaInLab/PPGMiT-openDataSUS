@@ -1,0 +1,231 @@
+---
+title: "Dashboard Óbitos COVID-19 no Brasil"
+runtime: shiny
+
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+    source_code: embed
+    navbar:
+      - { title: "Sobre Mim", href: "https://www.linkedin.com/in/marcelo-j-santos/", align: right }
+      - { icon: fa-address-card, href: "https://example.com/about", align: right }
+---
+
+```{r global, include=FALSE}
+
+#knitr::opts_knit$set(root.dir = getwd())
+
+# Diretorio da Trabalho
+# setwd(file.path("d:", "GoogleDrive","Mestrado","PPGMiT-openDataSUS"))
+
+# Carregando as bibliotecas necessárias
+
+if (!("flexdashboard") %in% installed.packages()) install.packages("flexdashboard")   
+if (!("shiny") %in% installed.packages()) install.packages("shiny")
+if (!("shinydashboard") %in% installed.packages()) install.packages("shinydashboard")
+if (!("ggplot2") %in% installed.packages()) install.packages("ggplot2")   
+if (!("dplyr") %in% installed.packages()) install.packages("dplyr")
+if (!("readr") %in% installed.packages()) install.packages("readr")
+if (!("geobr") %in% installed.packages()) install.packages("geobr")
+if (!("scales") %in% installed.packages()) install.packages("scales")
+if (!("ggspatial") %in% installed.packages()) install.packages("ggspatial")
+if (!("kableExtra") %in% installed.packages()) install.packages("kableExtra")
+if (!("knitr") %in% installed.packages()) install.packages("knitr")
+
+library(ggplot2) # Visualizacao dos dados
+library(dplyr)   # Preparacao de dados
+library(readr)   # Importacao dos dados
+library(geobr)   # Mapa do Brasil
+library(scales)
+library(ggspatial)
+library(flexdashboard)
+library(knitr)
+library(kableExtra)
+library(flexdashboard)
+library(shiny)
+library("devtools")
+
+#library(ggplot2)
+#library(readr)
+#library(lubridate)
+
+#library(stringr)
+#library(forcats)
+#library(tidyr)
+#library(scales)
+##library(ggtext)
+##library(tsibble)
+#library(fabletools)
+#library(feasts)
+#library(Hmisc)
+
+#library(ggplot2) # Visualizacao dos dados
+#library(dplyr)   # Preparacao de dados
+#library(readr)   # Importacao dos dados
+#library(geobr)   # Mapa do Brasil
+#library(scales)
+#library(ggspatial)
+#library(flexdashboard)
+#library(knitr)
+#library(kableExtra)
+
+# Importacao do arquivo municipios.csv
+df_municipios <- read.csv('./dados/MUNICIPIOS.csv', sep=";") %>% arrange(SG_UF_NOT,ID_MUNICIP)
+
+# Importacao do arquivo covid_totais.csv
+df_covid_totais <- read.csv('./dados/COVID_TOTAIS.csv', sep=";") 
+
+# Importacao do arquivo : covid.csv
+#df_covid_obitos <- read.csv('D:/GoogleDrive/Mestrado/PPGMIT_novo_dashboard/dados/covid_obitos.csv', sep=";")
+
+# Importacao do arquivo : covid_totais.csv
+#df_covid_totais <- read.csv('D:/GoogleDrive/Mestrado/PPGMIT_novo_dashboard/dados/covid_totais.csv', sep=";")
+
+num_notificacoes <- 1000
+UF <- c('**TODAS**','AC','AL','AM','AP','BA','CE','ES','GO','MA','MG','MS','MT','PA','PB','PE','PI','PR','RJ','RN','RO','RR','RS','SC','SE','SP','TO')
+
+Name=c('Test1', 'Test1', 'Test2')
+Number = c(8, 9, 7)
+
+zt <- data.frame(Name, Number)
+
+PersonList <- sort(unique(zt$Name))
+    
+```
+
+Selections {.sidebar}
+===============================
+```{r}
+## The shiny part
+selectInput("PersonSel", "Person: ", PersonList, selected = 'Test1')
+dateRangeInput("FiltroData", 
+               "Selecione Data:", 
+               min = "2021-01-01", 
+               max = "2023-12-31",
+               start = "2023-06-01",
+               end = "2023-12-31",
+              format = "dd/mm/yyyy",
+              language = "pt-BR",
+              separator = "até",
+              autoclose = TRUE,
+              width="300px",
+               )
+  selectInput("v1", 
+              label = "Selecione UF Notificação:", 
+              choices = UF, selected = "**TODAS**")
+  
+  selectInput("v2", 
+              label = "Municipio:", 
+              width="220px",
+              choices = df_municipios$iID_MUNICIP, 
+              selected = "**TODOS**")
+  
+
+ui <- fluidPage(
+   tags$style(type='text/css', ".selectize-input { font-size: 70%;} .selectize-dropdown { font-size: 70%; }"),
+   
+  selectInput("v1", 
+              label = "Selecione UF Notificação:", 
+              choices = UF, selected = "**TODAS**"),
+  
+  selectInput("v2", 
+              label = "Municipio:", 
+              width="220px",
+              choices = df_municipios$iID_MUNICIP, 
+              selected = "**TODOS**")
+  
+)
+server <- function(input, output, session){
+  
+  output$box1 <- renderValueBox({
+    d <- 10
+    valueBox( d )
+  })
+  
+  
+  observe({
+    if(!is.null(input$v2))
+      updateSelectInput(session, "v1", 
+                        choices = UF, 
+                        selected = isolate(input$v1) )
+  })
+
+  observe({
+    if(!is.null(input$v1))
+      mun <- df_municipios$ID_MUNICIP[df_municipios$SG_UF_NOT==input$v1]
+      updateSelectInput(session, "v2", 
+                        choices = c('**TODOS**',mun), 
+                        selected = isolate(input$v2) )
+                        
+  })
+  
+  r <- reactiveValues(
+    start = lubridate::ymd("2023-06-01"),
+    end = lubridate::ymd("2023-12-31")
+  )
+  
+  observeEvent( input$FiltroData , {
+    start <- (input$FiltroData[[1]])
+    end <- lubridate::ymd(input$FiltroData[[2]])
+    if (start >= end){
+      width="120px"
+      shinyalert::shinyalert("Data Inválida! Redigite", type = "error", size= "xs")
+      updateDateRangeInput(
+        session, 
+        "FiltroData", 
+        start = r$start,
+        end = r$end
+      )
+    } else {
+      r$start <- input$FiltroData[[1]]
+      r$end <- input$FiltroData[[2]]
+    }
+  }, ignoreInit = TRUE)
+  
+  observeEvent( input$select , {
+      print(input$select)
+  }, ignoreNULL=FALSE)
+
+}
+  
+shinyApp(ui = ui, server = server)
+
+```
+
+Tab 1
+======================================================================
+
+ 
+Row 
+-----------------------------------------------------------------------
+
+
+### Mean
+```{r}
+renderValueBox({
+cqi <- zt %>%
+  na.omit() %>%
+  filter(Name %in% input$PersonSel) %>%
+  summarize(avg_Number = round(mean(Number)))
+valueBox(value = cqi, icon = "fa-users")
+})
+```
+
+### Median
+```{r}
+renderValueBox({
+cqi <- zt %>%
+  na.omit() %>%
+  filter(Name %in% input$PersonSel) %>%
+  summarize(avg_Number = round(median(Number)))
+valueBox(value = cqi, icon = "fa-comments")
+})
+```
+
+```{r}
+### Teste
+renderValueBox({
+valueBox(value = input$v1, icon = "fa-comments")
+})
+```
