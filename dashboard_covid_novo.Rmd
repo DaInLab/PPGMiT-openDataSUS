@@ -176,10 +176,10 @@ df_dados_dashboard <- reactive({
   
   return(dashboard) })
 
+
 ```
 
 $$\\[.01in]$$
-
 
 ```{r, echo=FALSE, out.width = '50%', fig.align="center"}
 
