@@ -2,6 +2,72 @@
 
 df_dashboard <- read.csv('./dados/DASHBOARD.csv', sep=";") 
 
+
+# Grafico Idade
+library(plotly)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+
+
+barplot(table(df_dashboard$FAIXA_ETARIA))
+
+
+
+plot_ly(
+  data = df_dashboard,
+  x = ~NU_IDADE_N,
+  y = ~FAIXA_ETARIA,
+  type = "bar"
+)
+
+
+
+
+
+plot_ly(df_dashboard, 
+        x = ~NU_IDADE_N, 
+        type = 'scatter', 
+        mode = 'lines') %>% 
+  layout(title = "Line chart",
+         xaxis = list(title = "Age"))
+
+
+df_idade <- df_dashboard %>%
+    select(DT_EVOLUCA, CS_SEXO, NU_IDADE_N)  
+
+df_idade
+#Code 1
+ggplotly(df_idade %>% pivot_longer(-DT_EVOLUCA) %>%
+           mutate(Date=as.Date(DT_EVOLUCA)) %>%
+           ggplot(aes(x=DT_EVOLUCA,y=value,fill=CS_SEXO))+
+           geom_bar(stat = 'identity')+
+           labs(fill='Var'))
+#Code 2
+ggplotly(df_idade %>% pivot_longer(-DT_EVOLUCA) %>%
+           mutate(Date=as.Date(DT_EVOLUCA)) %>%
+           ggplot(aes(x=DT_EVOLUCA,y=value,fill=name))+
+           geom_bar(stat = 'identity',position = 'fill')+
+           labs(fill='Var')+
+           scale_y_continuous(labels = scales::percent))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 df_sexo <- aggregate(df_dashboard$CS_SEXO,
                      by=list(CS_SEXO=df_obitos$CS_SEXO), FUN=length) 
 

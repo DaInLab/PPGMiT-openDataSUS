@@ -14,11 +14,20 @@ output:
 
 <style type="text/css">
 
+.value-box {
+display: flex;
+align-items: center;
+justify-content: center;
+align-content: center;
+}
+
 .value-box .value {
     color: white;
+    font-size : 140%
 }
 .value-box .caption {
     color: white;
+    font-size : 105%
 }
 </style>
 
@@ -208,11 +217,11 @@ Row {data-height=050; data-width=150}
   
    if (total_notificacoes == 0) {
       valueBox(value = tags$p("---", style = "color:lightgray; "),
-              caption = tags$p("Total Notificações", style = "color:gray; "),
+              caption = tags$p("Total Notificações", style = "color:lightgray;font-size: 20px; "),
               icon = icon("list"), color ="white")
    } else {
-      valueBox(value = format(total_notificacoes, big.mark = "."),
-               caption = tags$p("Total Notificações", style = "color:white; "),
+      valueBox(value = tags$p(format(total_notificacoes, big.mark = "."), style = "font-size: 40px;"),
+               caption = tags$p("Total Notificações", style = "color:white;font-size: 20px; "),
                icon = icon("list"), color="darkcyan")    
      }
    
@@ -221,7 +230,7 @@ Row {data-height=050; data-width=150}
 
 ```
 
-### Cura COVID-19
+### Cura 
 
 ```{r}
 renderGauge({
@@ -242,7 +251,7 @@ renderGauge({
 
 ```
 
-### Óbito COVID-19
+### Óbito 
 ```{r}
 renderGauge({ 
 dados <- df_dados_totais()
@@ -278,7 +287,7 @@ renderGauge({
 
 ```
 
-### Ignorado COVID-19
+### Ignorado
 ```{r}
 renderGauge({ 
  dados <- df_dados_totais()
@@ -294,9 +303,70 @@ renderGauge({
 })
 
 ```
+Row {data-height=50; data-width=50}
+-------------------------------------
+
+### Óbitos - COVID-19
+```{r}
+renderValueBox({
+valueBox(value = tags$p("", style = "font-size: 40px;font-size: 40px;"),
+                   caption = tags$p("Óbitos - COVID-19", style = "color:white;font-size: 20px; "),
+                   icon = icon("list"), color ="orange")
+     
+  })
+
+```
+
 
 Column {.tabset}
 ---
+### Idade
+
+```{r}
+
+renderPlotly({
+
+dados <- df_dados_dashboard()    
+
+colors <- c("pink", "orange", "blue")
+    
+# set the marker properties, including the colors and line width
+marker <- list(colors = colors)
+    
+# define the text and hover information to be displayed on the chart
+textinfo <- "label+percent"
+hoverinfo <- "text"
+
+
+df_faixa_etaria <- dados %>%
+  group_by(FAIXA_ETARIA) %>% summarize(n = length(NU_IDADE_N))
+
+if (nrow(df_faixa_etaria) == 0) { chart <- plot_ly(
+                                            data = df_faixa_etaria,
+                                            x = ~ 0,
+                                            y = ~ 0,
+                                            type = 'bar') 
+
+   ggplotly(chart)}
+else {
+
+chart <- plot_ly(
+  data = df_faixa_etaria,
+  x = ~ FAIXA_ETARIA,
+  y = ~ n,
+  type = 'bar',
+  colors = c('#6bbabf', '#60ab3d'),
+  text = ~ paste("<br><b>Óbitos:</b>", n , "<br><b></b>", paste(round(unname(n) / sum(unname(n)) * 100,1), "%")),
+  hovertemplate = paste('%{text}<extra></extra>')
+) %>% layout(barmode = 'group', yaxis= list(showticklabels = FALSE, title = ""), xaxix = list(title="Faixa Etária"))
+
+
+ggplotly(chart) }
+
+
+})
+```
+
 ### Sexo
 
 ```{r}
@@ -315,7 +385,7 @@ marker <- list(colors = colors)
 textinfo <- "label+percent"
 hoverinfo <- "text"
 
-if (nrow(dados) == 0) { chart <- plot_ly(df_sexo, labels = ~0, values = ~0, type = "pie",
+if (nrow(df_sexo) == 0) { chart <- plot_ly(df_sexo, labels = ~0, values = ~0, type = "pie",
                      hole = 0.5, marker = marker,
                      text = ~paste(CS_SEXO, 0, sep = ": "),
                      textinfo = textinfo, hoverinfo = hoverinfo)
@@ -358,13 +428,6 @@ chart <- plot_ly(df_sexo, labels = ~label, values = ~x, type = "pie",
 
 ```
 
-### Idade
-
-```{r}
-
-
-```
-
 
 ### Escolaridade
 
@@ -381,6 +444,19 @@ chart <- plot_ly(df_sexo, labels = ~label, values = ~x, type = "pie",
 
 ### Sinais e Sintomas
 
+```{r}
+
+```
+
+Row {data-height=150; data-width=150}
+-------------------------------------
+
+### Óbitos - Fatores de Risco
+```{r}
+
+```
+
+### Óbitos - Sinais e Sintomas
 ```{r}
 
 ```
@@ -404,10 +480,14 @@ renderValueBox({
   
    if (total_obito == 0) {
      valueBox(value = tags$p("---", style = "color:lightgray; "),
-              captio = tags$p("Total Óbitos", style = "color:lightgray; "),
+              caption = tags$p("Total", style = "color:lightgray;font-size: 20px; "),
               icon = icon("list"), color ="white")
    } else {
-      valueBox(value = format(total_obito, big.mark = "."),icon = icon("list"), color ="red")
+          valueBox(value = tags$p(format(total_obito, big.mark = "."), style = "font-size: 40px;font-size: 40px;"),
+                   caption = tags$p("Total", style = "color:white;font-size: 20px; "),
+                   icon = icon("list"), color ="red")
+     
+     
      }
    
   
@@ -417,7 +497,7 @@ renderValueBox({
 
 
 
-### Óbitos Média Idade 
+### Média Idade 
 ```{r}
 renderValueBox({
    
@@ -431,7 +511,7 @@ renderValueBox({
    
    if (media_idade == 0 | is.nan(media_idade)) {
      valueBox(value = tags$p("---", style = "color:lightgray; "),
-              captio = tags$p("Óbitos Média Idade", style = "color:lightgray; "),
+              captio = tags$p("Média Idade", style = "color:lightgray; "),
               icon = icon("list"), color ="white")
    } else {
       valueBox(value = media_idade,icon = icon("list"), color ="darkblue")    
@@ -464,14 +544,14 @@ renderValueBox({
                 "3" = {valueBox(value = "Ignorado ", icon = icon("list"), color ="green")},
                 "0" = {valueBox(value = "   ---   ", color ="darkblue")} 
          )} else {valueBox(value = tags$p("---", style = "color:lightgray; "),
-              captio = tags$p("Óbitos Sexo", style = "color:lightgray; "),
+              caption = tags$p("Sexo", style = "color:lightgray; "),
               icon = icon("list"), color ="white")}
                
    
 })
 ```
 
-### Óbitos Escolaridade
+### Escolaridade
 ```{r}
 renderValueBox({ 
   
@@ -511,13 +591,13 @@ switch(input$FiltroAno,
           "7" = {valueBox(value = "Ignorado     ", icon = icon("list"), color ="darkblue")}
    )}
    else {valueBox(value = tags$p("---", style = "color:lightgray; "),
-              captio = tags$p("Óbitos Escolaridade", style = "color:lightgray; "),
+              captio = tags$p("Escolaridade", style = "color:lightgray; "),
               icon = icon("list"), color ="white")}
    
 })
 ```
     
-### Óbitos Raça
+### Raça
 ```{r}
 renderValueBox({ 
 dados <- df_dados_totais()
@@ -540,7 +620,7 @@ switch(input$FiltroAno,
                 "5" = {valueBox(value = "Indígnea", icon = icon("list"), color ="pink")},
                 "6" = {valueBox(value = "Ignorada", icon = icon("list"), color ="green")}
          )} else {valueBox(value = tags$p("---", style = "color:lightgray; "),
-              captio = tags$p("Óbitos Raça", style = "color:lightgray; "),
+              captio = tags$p("Raça", style = "color:lightgray; "),
               icon = icon("list"), color ="white")}
 })
 

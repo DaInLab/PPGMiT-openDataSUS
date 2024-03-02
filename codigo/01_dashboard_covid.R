@@ -110,17 +110,30 @@ df_obitos <- df_covid %>%
   mutate( NU_IDADE_N = as.numeric(NU_IDADE_N)) %>%
   arrange(ANO_EVOLUCA,SG_UF_NOT, ID_MUNICIP)
 
+# Faixa Etaria Obitos
+df_obitos <- df_obitos %>% 
+  mutate(FAIXA_ETARIA = case_when(
+  NU_IDADE_N <=10 ~ "0-10 anos",
+  NU_IDADE_N >=11 & NU_IDADE_N<= 20~ "11-20 anos ",
+  NU_IDADE_N >=21 & NU_IDADE_N<= 50~ "21-50 anos ",
+  NU_IDADE_N >=51 & NU_IDADE_N<= 70~ "51-70 anos ",
+  NU_IDADE_N >=71 & NU_IDADE_N<= 80~ "71-80 anos ",
+  NU_IDADE_N >=81 ~ "> 81 anos "))
+
 # # Criando arquivo do dataframe df_covid_obitos (Classificacao Final : SRAG por COVID-19 e Evolucao do Caso : Obito)
 write_csv2(df_obitos, file='./dados/COVID_OBITOS.csv')
 
-#
+# Dados Dashboard
 df_dashboard <- df_obitos %>% 
-  select(ANO_EVOLUCA, 
+  select(DT_EVOLUCA,
+         ANO_EVOLUCA, 
          SG_UF_NOT, 
          ID_MUNICIP, 
          CS_SEXO,
          CS_ESCOL_N,
-         CS_RACA)
+         CS_RACA,
+         NU_IDADE_N,
+         FAIXA_ETARIA)
 
 # # Criando arquivo do dataframe df_covid_obitos (Classificacao Final : SRAG por COVID-19 e Evolucao do Caso : Obito)
 write_csv2(df_dashboard, file='./dados/DASHBOARD.csv')
