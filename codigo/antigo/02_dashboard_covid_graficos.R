@@ -1,7 +1,249 @@
 # load obitos
-df_dashboard <- read.csv('./dados/DASHBOARD.csv', sep=";") 
+library(ggplot2) # Visualizacao dos dados
+library(dplyr)   # Preparacao de dados
+library(readr)   # Importacao dos dados
+library(flexdashboard)
+library(shiny)
+library(shinyWidgets)
+library(knitr)
+library(kableExtra)
+library(plotly)
+
+df_dashboard <- read.csv('./dados/DASHBOARD.csv', sep=";")
+
+df_totais <- read.csv('./dados/COVID_TOTAIS.csv', sep=";") 
+
+dados$qt_sexo_M_2021
+
+dados <- df_totais
+
+# 1- Masculino 2-Feminino 3-Ignorado
+
+switch("2021",
+       "2021" = {sexo <- c(sum(as.numeric(dados$qt_sexo_M_2021)), sum(as.numeric(dados$qt_sexo_F_2021)), sum(as.numeric(dados$qt_sexo_I_2021)))},
+       "2022" = {sexo <- c(sum(as.numeric(dados$qt_sexo_M_2022)), sum(as.numeric(dados$qt_sexo_F_2022)), sum(as.numeric(dados$qt_sexo_I_2022)))},
+       "2023" = {sexo <- c(sum(as.numeric(dados$qt_sexo_M_2023)), sum(as.numeric(dados$qt_sexo_F_2023)), sum(as.numeric(dados$qt_sexo_I_2023)))}
+)
+
 
 dados <- df_dashboard
+
+df_sexo <- aggregate(dados$CS_SEXO,
+                     by=list(CS_SEXO=dados$CS_SEXO), FUN=length) 
+
+df_sexo
+
+
+
+#  Raça 1-Branca  2-Preta 3-Amarela 4-Parda 5-Indígena 9-Ignorada
+switch("2021",
+       "2021" = {raca <- c(sum(as.numeric(dados$qt_raca_1_2021)), sum(as.numeric(dados$qt_raca_2_2021)), sum(as.numeric(dados$qt_raca_3_2021)),sum(as.numeric(dados$qt_raca_4_2021)), sum(as.numeric(dados$qt_raca_5_2021)),sum(as.numeric(dados$qt_raca_9_2021)))},
+       "2022" = {raca <- c(sum(as.numeric(dados$qt_raca_1_2022)), sum(as.numeric(dados$qt_raca_2_2022)), sum(as.numeric(dados$qt_raca_3_2022)),sum(as.numeric(dados$qt_raca_4_2022)), sum(as.numeric(dados$qt_raca_5_2022)),sum(as.numeric(dados$qt_raca_9_2022)))},
+       "2023" = {raca <- c(sum(as.numeric(dados$qt_raca_1_2023)), sum(as.numeric(dados$qt_raca_2_2023)), sum(as.numeric(dados$qt_raca_3_2023)),sum(as.numeric(dados$qt_raca_4_2023)), sum(as.numeric(dados$qt_raca_5_2023)),sum(as.numeric(dados$qt_raca_9_2023)))}
+)
+
+maior_raca <- which(raca == max(as.numeric(raca)))
+
+
+
+
+raca <- data.frame(raca=c("Branca", 
+                          "Preta",
+                          "Amarela",
+                          "Parda",
+                          "Indígena",
+                          "Ignorada"),
+                   qtde= c(as.numeric(sum(as.numeric(dados$qt_raca_1_2021))),
+                           as.numeric(sum(as.numeric(dados$qt_raca_2_2021))),
+                           as.numeric(sum(as.numeric(dados$qt_raca_3_2021))),
+                           as.numeric(sum(as.numeric(dados$qt_raca_4_2021))),
+                           as.numeric(sum(as.numeric(dados$qt_raca_5_2021))),
+                           as.numeric(sum(as.numeric(dados$qt_raca_9_2021))))
+                           
+                           ,
+                           sum(as.numeric(dados$qt_raca_2_2021)))   
+
+raca 
+
+c('Branca',as.numeric(sum(as.numeric(dados$qt_raca_1_2021))),
+          'Preta',as.numeric(sum(as.numeric(dados$qt_raca_2_2021))))
+
+raca
+
+dados$qt_raca_1_2021
+
+str(raca)
+
+
+
+
+, sum(as.numeric(dados$qt_raca_2_2021)), sum(as.numeric('Amarela',dados$qt_raca_3_2021)),sum('Parda, as.numeric(dados$qt_raca_4_2021)), sum(as.numeric('Indígena', dados$qt_raca_5_2021)),sum(as.numeric('Ignorada',dados$qt_raca_9_2021)))
+
+
+```{r}
+renderGauge({ 
+  dados <- df_dados_totais()
+  switch(input$FiltroAno,
+         "2021" = {perc_ignora <- if (sum(dados$tot_notifica_2021)==0) {0} else {(sum(dados$tot_ignora_2021)/sum(dados$tot_notifica_2021))* 100}},
+         "2022" = {perc_ignora <- if (sum(dados$tot_notifica_2022)==0) {0} else {(sum(dados$tot_ignora_2022)/sum(dados$tot_notifica_2022))* 100}},
+         "2023" = {perc_ignora <- if (sum(dados$tot_notifica_2023)==0) {0} else {(sum(dados$tot_ignora_2023)/sum(dados$tot_notifica_2023))* 100}}
+  )
+  
+  gauge(perc_ignora, min = 0, max = 100, symbol = '%', label="Outra Causa%", gaugeSectors(
+    success = c(0, 19), warning = c(20, 59), danger = c(60, 100),
+    colors = c("blue","yellow", "red")))
+})
+
+```
+
+
+
+
+
+
+dados <- df_totais
+
+switch(2021,
+       "2021" = {raca <- c(sum(as.numeric(dados$qt_raca_1_2021)), sum(as.numeric(dados$qt_raca_2_2021)), sum(as.numeric(dados$qt_raca_3_2021)),sum(as.numeric(dados$qt_raca_4_2021)), sum(as.numeric(dados$qt_raca_5_2021)),sum(as.numeric(dados$qt_raca_9_2021))},
+       "2022" = {raca <- c(sum(dados$qt_raca_1_2022), sum(dados$qt_raca_2_2022), sum(dados$qt_raca_3_2022),sum(dados$qt_raca_4_2022), sum(dados$qt_raca_5_2022),sum(dados$qt_raca_9_2022))},
+       "2023" = {raca <- c(sum(dados$qt_raca_1_2023), sum(dados$qt_raca_2_2023), sum(dados$qt_raca_3_2023),sum(dados$qt_raca_4_2023), sum(dados$qt_raca_5_2023),sum(dados$qt_raca_9_2023))}
+)
+
+raca <- c(sum(dados$qt_raca_1_2021), sum(dados$qt_raca_2_2021), sum(dados$qt_raca_3_2021),sum(dados$qt_raca_4_2021), sum(dados$qt_raca_5_2021),sum(dados$qt_raca_9_2021))
+
+raca
+
+
+df_sintomas <- data.frame(SINTOMAS= c("TOSSE","FEBRE","GARGANTA","DISPNEIA","DESC_RESP","SATURACAO","DIARREIA",
+                                      "VOMITO","DOR_ABD","FADIGA","PERD_OLFT","PERD_PALA"), 
+                          DESCRICAO= c("Tosse","Febre","Dor de Garganta","Dispnéia","Desconforto Respiratório","Saturação <95%","Diarréia",
+                                       "Vômito","Dor Abdominal","Fadiga","Perda de Olfato","Perda de Paladar"),
+                          QTD=c(0))
+df_sintomas$QTD[df_sintomas$SINTOMAS=="TOSSE"] <- dados %>% filter(TOSSE=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="FEBRE"] <- dados %>% filter(FEBRE=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="GARGANTA"] <- dados %>% filter(GARGANTA=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="DISPNEIA"] <- dados %>% filter(DISPNEIA=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="DESC_RESP"] <- dados %>% filter(DESC_RESP=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="SATURACAO"] <- dados %>% filter(SATURACAO=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="DIARREIA"] <- dados %>% filter(DIARREIA=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="VOMITO"] <- dados %>% filter(VOMITO=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="DOR_ABD"] <- dados %>% filter(DOR_ABD=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="FADIGA"] <- dados %>% filter(FADIGA=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="PERD_OLFT"] <- dados %>% filter(PERD_OLFT=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="PERD_PALA"] <- dados %>% filter(PERD_PALA=="1") %>% count()
+
+
+df_sintomas <- df_sintomas %>% 
+  filter(as.numeric(QTD)>0) %>%
+  select(QTD, DESCRICAO) %>% 
+  arrange(desc(as.numeric(QTD)))
+
+
+
+df_sintomas$rank <- row_number(df_sintomas)
+
+df_sintomas %>%
+  arrange(as.numeric(rank))
+
+
+
+df_fatores <- data.frame(
+  FATOR= c("PUERPERA", "CARDIOPATI","HEMATOLOGI","SIND_DOWN","HEPATICA","ASMA","DIABETES","NEUROLOGIC","PNEUMOPATI","IMUNODEPRE","RENAL",
+           "OBESIDADE"),
+  DESCRICAO= c("Puérpera", "Doença Cardiovascular","Doença Hematológica","Síndrome de Down","Doença Hepática", "Asma","Diabetes Mellitus","Doença Neurológica","Pneumopatia","Imunodeficiência","Doença Renal","Obesidade"),
+  QTD=c(0))
+
+df_fatores$QTD[df_fatores$FATOR=="PUERPERA"] <- dados %>% filter(PUERPERA=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="CARDIOPATI"] <- dados %>% filter(CARDIOPATI=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="HEMATOLOGI"] <- dados %>% filter(HEMATOLOGI=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="SIND_DOWN"] <- dados %>% filter(SIND_DOWN=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="HEPATICA"] <- dados %>% filter(HEPATICA=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="ASMA"] <- dados %>% filter(ASMA=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="DIABETES"] <- dados %>% filter(DIABETES=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="NEUROLOGIC"] <- dados %>% filter(NEUROLOGIC=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="PNEUMOPATI"] <- dados %>% filter(PNEUMOPATI=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="IMUNODEPRE"] <- dados %>% filter(IMUNODEPRE=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="RENAL"] <- dados %>% filter(RENAL=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="OBESIDADE"] <- dados %>% filter(OBESIDADE=="1") %>% count()
+
+df_fatores$QTD <- as.numeric(df_fatores$QTD)
+
+df_fatores %>%
+mutate( (QTD/sum(QTD))*100)            
+
+
+df_fatores <- df_fatores %>%
+  summarise(as.numeric(QTD)/sum(as.numeric(QTD))
+
+as.numeric(df_fatores$QTD)/sum(as.numeric(df_fatores$QTD))*100            
+            
+  df_fatores  
+
+  mutate(round(QTD / sum(QTD) * 100))
+
+df_fatores
+
+df_fatores
+
+  group_by(DESCRICAO) %>% 
+  summarize(n = QTD, perc = round(unname(n) / sum(unname(n)) * 100,1))
+
+
+str(df_fatores)
+
+
+
+
+
+
+
+df_fatores
+
+
+
+
+colors <- c("pink", "orange", "blue")
+
+# set the marker properties, including the colors and line width
+marker <- list(colors = colors)
+
+# define the text and hover information to be displayed on the chart
+textinfo <- "label+percent"
+hoverinfo <- "text"
+
+df_fatores <- dados %>%
+  group_by(FAIXA_ETARIA) %>% summarize(n = length(NU_IDADE_N))
+
+if (nrow(df_faixa_etaria) == 0) { chart <- plot_ly(df_faixa_etaria, labels = ~0, values = ~0, type = "pie",
+                                                   hole = 0.5, marker = marker,
+                                                   textinfo = textinfo, hoverinfo = hoverinfo)
+ggplotly(chart)}
+else {
+  
+  chart <- plot_ly(
+    data = df_fatores,
+    x = ~ DESCRICAO,
+    y = ~ n,
+    type = 'bar',
+    colors = c('#6bbabf', '#60ab3d'),
+    text = ~ paste("<br><b>Óbitos:</b>", n , "<br><b></b>", paste(round(unname(n) / sum(unname(n)) * 100,1), "%")),
+    hovertemplate = paste('%{text}<extra></extra>')
+  ) %>% layout(barmode = 'group', yaxis= list(showticklabels = FALSE, title = ""), xaxis = list(title="Faixa Etária"))
+  
+  
+  ggplotly(chart)
+
+
+
+
+
+
+
+
+
+
+
+
 
 dados <- dados %>% 
   filter(ID_MUNICIP =="AGUA BRANCA")

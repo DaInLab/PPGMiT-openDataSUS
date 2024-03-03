@@ -111,10 +111,7 @@ df_obitos <- df_covid %>%
   arrange(ANO_EVOLUCA,SG_UF_NOT, ID_MUNICIP)
 
 # Faixa Etaria Obitos
-# Sintomas
 
-df_obitos$SINTOMAS <- ""
-df_obitos$SINAIS <- ""
 df_obitos <- df_obitos %>% 
   mutate(FAIXA_ETARIA = case_when(
   NU_IDADE_N <=10 ~ "0-10 anos",
@@ -122,20 +119,7 @@ df_obitos <- df_obitos %>%
   NU_IDADE_N >=21 & NU_IDADE_N<= 50~ "21-50 anos ",
   NU_IDADE_N >=51 & NU_IDADE_N<= 70~ "51-70 anos ",
   NU_IDADE_N >=71 & NU_IDADE_N<= 80~ "71-80 anos ",
-  NU_IDADE_N >=81 ~ "81 ou mais")) %>%
-  mutate(FATORES = case_when(FEBRE == "1"     ~ paste(FATORES, str_trim("FEBRE"), sep="_"), TRUE ~ paste(FATORES,str_trim(""))))  %>%
-  mutate(FATORES = case_when(TOSSE == "1"     ~ paste(FATORES, str_trim("TOSSE"), sep="_"), TRUE ~ paste(FATORES,str_trim(""))))  %>%
-  mutate(FATORES = case_when(FADIGA == "1"    ~ paste(FATORES, str_trim("FADIGA"), sep="_"), TRUE ~ paste(FATORES,str_trim(""))))  %>%  
-  mutate(FATORES = case_when(GARGANTA  == "1" ~ paste(FATORES, str_trim("DOR DE GARGANTA"), sep="_"), TRUE ~ paste(FATORES,str_trim("")))) %>%         
-  mutate(FATORES = case_when(DISPNEIA  == "1" ~ paste(FATORES, str_trim("DISPNEIA"), sep="_"), TRUE ~ paste(FATORES,str_trim("")))) %>%         
-  mutate(FATORES = case_when(DESC_RESP == "1" ~ paste(FATORES, str_trim("DESCONFORTO RESPIRATÓRIO"), sep="_"), TRUE ~ paste(FATORES,str_trim("")))) %>%         
-  mutate(FATORES = case_when(SATURACAO == "1" ~ paste(FATORES, str_trim("SATURAÇÃO < 95%"), sep="_"), TRUE ~ paste(FATORES,str_trim(""))))  %>%         
-  mutate(FATORES = case_when(DIARREIA == "1"  ~ paste(FATORES, str_trim("DIARRÉIA"), sep="_"), TRUE ~ paste(FATORES,str_trim(""))))  %>%         
-  mutate(FATORES = case_when(VOMITO == "1"    ~ paste(FATORES, str_trim("VÔMITO"), sep="_"), TRUE ~ paste(FATORES,str_trim(""))))  %>%         
-  mutate(FATORES = case_when(DOR_ABD == "1"   ~ paste(FATORES, str_trim("DOR ABDOMINAL"), sep="_"), TRUE ~ paste(FATORES,str_trim(""))))  %>%
-  mutate(FATORES = case_when(PERD_OLFT == "1" ~ paste(FATORES, str_trim("PERDA DE OLFATO"), sep="_"), TRUE ~ paste(FATORES,str_trim(""))))  %>%         
-  mutate(FATORES = case_when(PERD_PALA == "1" ~ paste(FATORES, str_trim("PERDA DE PALADAR"), sep="_"), TRUE ~ paste(FATORES,str_trim(""))))  %>%         
-  mutate(FATORES = case_when(OUTRO_SIN == "1" ~ paste(FATORES, str_trim(OUTRO_DES), sep="_"), TRUE ~ paste(FATORES,str_trim(""))))  
+  NU_IDADE_N >=81 ~ "81 ou mais")) 
 
 # # Criando arquivo do dataframe df_covid_obitos (Classificacao Final : SRAG por COVID-19 e Evolucao do Caso : Obito)
 write_csv2(df_obitos, file='./dados/COVID_OBITOS.csv')
@@ -186,35 +170,6 @@ df_dashboard <- df_obitos %>%
 
 # # Criando arquivo do dataframe df_covid_obitos (Classificacao Final : SRAG por COVID-19 e Evolucao do Caso : Obito)
 write_csv2(df_dashboard, file='./dados/DASHBOARD.csv')
-
-# Graficos
-library(ggplot2)
-
-# Create test data.
-data <- data.frame(
-  category=c("A", "B", "C"),
-  count=c(10, 60, 30)
-)
-
-# Compute percentages
-df_sexo$fraction = df_sexo$count / sum(df_sexo$count)
-
-# Compute the cumulative percentages (top of each rectangle)
-data$ymax = cumsum(data$fraction)
-
-# Compute the bottom of each rectangle
-data$ymin = c(0, head(data$ymax, n=-1))
-
-# Make the plot
-ggplot(data, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=CS_SEXo)) +
-  geom_rect() +
-  coord_polar(theta="y") + # Try to remove that to understand how the chart is built initially
-  xlim(c(2, 4)) # Try to remove that to see how to make a pie chart
-
-
-df_sexo <- aggregate(df_obitos$CS_SEXO,
-                            by=list(CS_SEXO=df_obitos$CS_SEXO), FUN=length) 
-
 
 ## Totais
 
@@ -796,8 +751,6 @@ df_obitos_raca_9_2023 <-
   summarise(qt_raca_9_2023 = sum(x), .groups ='drop')
 
 df_totais <- df_totais %>% 
-  left_join(df_obitos_raca_1_2021, by = c('SG_UF_NOT' = 'SG_UF_NOT'  , 
-                                          'ID_MUNICIP' = 'ID_MUNICIP')) %>%
   left_join(df_obitos_raca_1_2021, by = c('SG_UF_NOT' = 'SG_UF_NOT'  , 
                                             'ID_MUNICIP' = 'ID_MUNICIP')) %>%
   left_join(df_obitos_raca_2_2021, by = c('SG_UF_NOT' = 'SG_UF_NOT'  , 

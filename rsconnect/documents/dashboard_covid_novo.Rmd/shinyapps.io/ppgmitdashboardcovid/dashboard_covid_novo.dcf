@@ -5,7 +5,7 @@ account: ppgmitdashboardcovid
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 11319944
-bundleId: 8321221
+bundleId: 8323380
 url: https://ppgmitdashboardcovid.shinyapps.io/dashboard_covid_novo/
 version: 1
 asMultiple: FALSE

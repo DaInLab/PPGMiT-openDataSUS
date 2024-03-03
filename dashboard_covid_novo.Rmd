@@ -9,28 +9,33 @@ output:
     source_code: embed
     navbar:
       - { title: "Sobre Mim", href: "https://www.linkedin.com/in/marcelo-j-santos/", align: right }
-      - { icon: fa-address-card, href: "https://example.com/about", align: right }
 ---
 
 <style type="text/css">
+
+.html-widget.gauge svg {
+  height: 40%; 
+  font-size:80%;
+}
 
 .value-box {
 display: flex;
 align-items: center;
 text-align: center;
-height:85%;
+height 95%;
 }
 .value-box .value {
     color: white;
-    font-size : 20px
+    font-size : 27px
 }
 .value-box .caption {
     color: white;
-    font-size : 15px
+    font-size : 25px
 }
 </style>
 
 ```{r setup, include=FALSE}
+#       - { icon: fa-address-card, href: "https://example.com/about", align: right }
 #knitr::opts_knit$set(root.dir = getwd())
 
 # Diretorio da Trabalho
@@ -100,7 +105,7 @@ library(plotly)
 #library(kableExtra)
 
 # Importacao do arquivo municipios.csv
-#df_municipios <- read.csv('./dados/MUNICIPIOS.csv', sep=";") %>% arrange(SG_UF_NOT,ID_MUNICIP)
+df_municipios <- read.csv('./dados/MUNICIPIOS.csv', sep=";") %>% arrange(SG_UF_NOT,ID_MUNICIP)
 
 # Importacao do arquivo covid_totais.csv
 df_totais <- read.csv('./dados/COVID_TOTAIS.csv', sep=";") 
@@ -111,10 +116,6 @@ df_totais$obitos_md_idade_2023 <- as.numeric(gsub(",", ".", gsub("\\.", "", df_t
 
 # Importacao do arquivo : dashboard.csv
 df_dashboard <- read.csv('./dados/DASHBOARD.csv', sep=";") 
-
-# Importacao do arquivo : covid_totais.csv
-#df_covid_totais <- read.csv('D:/GoogleDrive/Mestrado/PPGMIT_novo_dashboard/dados/covid_totais.csv', sep=";")
-
 
 ```
 
@@ -135,7 +136,7 @@ radioGroupButtons(
 
 # UF
 UF <- c('**TODAS**','AC','AL','AM','AP','BA','CE','ES','GO','MA','MG','MS','MT','PA','PB','PE','PI','PR','RJ','RN','RO','RR','RS','SC','SE','SP','TO')
-df_municipios <- distinct(df_totais, SG_UF_NOT, ID_MUNICIP)
+#df_municipios <- distinct(df_totais, SG_UF_NOT, ID_MUNICIP)
 
 selectInput("FiltroUF", 
             label = "Selecione UF Notificação:",  
@@ -190,19 +191,61 @@ df_dados_dashboard <- reactive({
 
 $$\\[.01in]$$
 
-```{r, echo=FALSE, out.width = '50%', fig.align="center"}
-
+```{r, out.width = '53%', fig.align="center"}
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+knitr::include_graphics("./imagens/unesp.png")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
 knitr::include_graphics("./imagens/FAAC-logo_RGB.png")
-
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
 knitr::include_graphics("./imagens/ppgmit.jpg")
-
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
+verbatimTextOutput("")
 knitr::include_graphics("./imagens/linda.jpg")
 ```
 
 
-Row {data-height=050; data-width=100}
+Row {data-width=250}
 -------------------------------------
-### Total Notificações {data-height=050; data-width=100}
+### Total Notificações 
 ```{r}
  renderValueBox({
   
@@ -230,7 +273,7 @@ Row {data-height=050; data-width=100}
 
 ```
 
-### Cura {data-height=050; data-width=100}
+### Cura 
 
 ```{r}
 renderGauge({
@@ -251,7 +294,7 @@ renderGauge({
 
 ```
 
-### Óbito {data-height=050; data-width=100}
+### Óbito 
 ```{r}
 renderGauge({ 
 dados <- df_dados_totais()
@@ -268,7 +311,7 @@ dados <- df_dados_totais()
   
 ```
     
-### Óbito-Outras Causas {data-height=050; data-width=100}
+### Óbito-Outras Causas 
 ```{r}
 renderGauge({ 
 
@@ -284,23 +327,6 @@ renderGauge({
     colors = c("blue","yellow", "red")))
 })
 
-
-```
-
-### Ignorado {data-height=050; data-width=100}
-```{r}
-renderGauge({ 
- dados <- df_dados_totais()
-   switch(input$FiltroAno,
-          "2021" = {perc_ignora <- if (sum(dados$tot_notifica_2021)==0) {0} else {(sum(dados$tot_ignora_2021)/sum(dados$tot_notifica_2021))* 100}},
-          "2022" = {perc_ignora <- if (sum(dados$tot_notifica_2022)==0) {0} else {(sum(dados$tot_ignora_2022)/sum(dados$tot_notifica_2022))* 100}},
-          "2023" = {perc_ignora <- if (sum(dados$tot_notifica_2023)==0) {0} else {(sum(dados$tot_ignora_2023)/sum(dados$tot_notifica_2023))* 100}}
-   )
-  
-  gauge(perc_ignora, min = 0, max = 100, symbol = '%', label="Outra Causa%", gaugeSectors(
-    success = c(0, 19), warning = c(20, 59), danger = c(60, 100),
-    colors = c("blue","yellow", "red")))
-})
 
 ```
 
@@ -358,7 +384,7 @@ renderPlotly({
 dados <- df_dados_dashboard()    
 df_sexo <- dados
 
-colors <- c("pink", "orange", "blue")
+colors <- c("orange", "blue")
     
 # set the marker properties, including the colors and line width
 marker <- list(colors = colors)
@@ -383,7 +409,7 @@ df_sexo <- df_sexo %>%
   CS_SEXO == "I" ~ "Ignorado"))
 
 chart <- plot_ly(df_sexo, labels = ~label, values = ~x, type = "pie",
-                     hole = 0.5, marker = marker,
+                     hole = 0.7, marker = marker,
                      text = ~paste(label, " : ", x, " Óbitos"),
                      textinfo = textinfo, hoverinfo = hoverinfo)
     
@@ -391,6 +417,7 @@ chart <- plot_ly(df_sexo, labels = ~label, values = ~x, type = "pie",
   layout(chart, 
   legend = list(x = 0, y = 1, font = list(width = 26, color = "black")))
 
+  
   ggplotly(chart)
 
 }
@@ -409,7 +436,7 @@ renderPlotly({
 dados <- df_dados_dashboard()    
 df_etnia <- dados
 
-colors <- c("pink", "orange", "blue")
+colors <- c("orange", "blue")
     
 # set the marker properties, including the colors and line width
 marker <- list(colors = colors)
@@ -513,24 +540,140 @@ chart <- plot_ly(df_escola, labels = ~label, values = ~x, type = "pie",
 
 ```
 
-### Fatores de Risco 
-
-```{r}
-
-```
-
-
 ### Sinais e Sintomas
 
 ```{r}
 
+renderPlotly({
+  
+dados <- df_dados_dashboard()      
+
+df_sintomas <- data.frame(SINTOMAS= c("TOSSE","FEBRE","GARGANTA","DISPNEIA","DESC_RESP","SATURACAO","DIARREIA",
+                              "VOMITO","DOR_ABD","FADIGA","PERD_OLFT","PERD_PALA"), 
+                     DESCRICAO= c("Tosse","Febre","Dor de Garganta","Dispnéia","Desconforto Respiratório","Saturação <95%","Diarréia",
+                              "Vômito","Dor Abdominal","Fadiga","Perda de Olfato","Perda de Paladar"),
+                     QTD=c(0))
+df_sintomas$QTD[df_sintomas$SINTOMAS=="TOSSE"] <- dados %>% filter(TOSSE=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="FEBRE"] <- dados %>% filter(FEBRE=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="GARGANTA"] <- dados %>% filter(GARGANTA=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="DISPNEIA"] <- dados %>% filter(DISPNEIA=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="DESC_RESP"] <- dados %>% filter(DESC_RESP=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="SATURACAO"] <- dados %>% filter(SATURACAO=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="DIARREIA"] <- dados %>% filter(DIARREIA=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="VOMITO"] <- dados %>% filter(VOMITO=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="DOR_ABD"] <- dados %>% filter(DOR_ABD=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="FADIGA"] <- dados %>% filter(FADIGA=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="PERD_OLFT"] <- dados %>% filter(PERD_OLFT=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="PERD_PALA"] <- dados %>% filter(PERD_PALA=="1") %>% count()
+
+df_sintomas$QTD <- as.numeric(df_sintomas$QTD)
+
+# set the marker properties, including the colors and line width
+marker <-  list(color = ~QTD, font = list(size=61), colorscale = list(c("orange", "red"))) 
+
+# define the text and hover information to be displayed on the chart
+textinfo <- "label+percent"
+hoverinfo <- "text"
+
+if (sum(df_sintomas$QTD) == 0) { 
+  df_sintomas <- data.frame("")
+  colnames(df_sintomas) = c("")
+  chart <- plot_ly(df_sintomas, labels = ~0, values = ~0, type = "pie",
+                                                   hole = 0.5, marker = marker,
+                                                   textinfo = textinfo, hoverinfo = hoverinfo)
+ggplotly(chart)}
+else {
+  
+  chart <- plot_ly(
+  data = df_sintomas,
+  x = ~ DESCRICAO,
+  y = ~ QTD,
+  type = 'bar',
+  textfont = list(size=18),
+  marker = marker,
+  text = ~ paste("<br><b>Óbitos:</b>", QTD , "<br><b></b>", paste(round(unname(QTD) / sum(unname(QTD)) * 100,1), "%")),
+  hovertemplate = paste('%{text}<extra></extra>')
+) %>% layout(barmode = 'group', yaxis= list(showticklabels = FALSE, title = ""), 
+             xaxis = list(title="", tickfont = list(size = 14)))
+  
+  ggplotly(chart) }
+
+})
+
 ```
+
+
+### Fatores de Risco 
+
+```{r}
+
+renderPlotly({
+  
+dados <- df_dados_dashboard()      
+
+df_fatores <- data.frame(
+  FATOR= c("PUERPERA", "CARDIOPATI","HEMATOLOGI","SIND_DOWN","HEPATICA","ASMA","DIABETES","NEUROLOGIC","PNEUMOPATI","IMUNODEPRE","RENAL",
+           "OBESIDADE"),
+  DESCRICAO= c("Puérpera", "Doença Cardiovascular","Doença Hematológica","Síndrome de Down","Doença Hepática", "Asma","Diabetes Mellitus","Doença Neurológica","Pneumopatia","Imunodeficiência","Doença Renal","Obesidade"),
+  QTD=c(0))
+
+df_fatores$QTD[df_fatores$FATOR=="PUERPERA"] <- dados %>% filter(PUERPERA=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="CARDIOPATI"] <- dados %>% filter(CARDIOPATI=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="HEMATOLOGI"] <- dados %>% filter(HEMATOLOGI=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="SIND_DOWN"] <- dados %>% filter(SIND_DOWN=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="HEPATICA"] <- dados %>% filter(HEPATICA=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="ASMA"] <- dados %>% filter(ASMA=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="DIABETES"] <- dados %>% filter(DIABETES=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="NEUROLOGIC"] <- dados %>% filter(NEUROLOGIC=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="PNEUMOPATI"] <- dados %>% filter(PNEUMOPATI=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="IMUNODEPRE"] <- dados %>% filter(IMUNODEPRE=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="RENAL"] <- dados %>% filter(RENAL=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="OBESIDADE"] <- dados %>% filter(OBESIDADE=="1") %>% count()
+
+df_fatores$QTD <- as.numeric(df_fatores$QTD)
+
+# set the marker properties, including the colors and line width
+marker <-  list(color = ~QTD, colorscale = list(c(1, 65), c("orange", "red"))) 
+
+# define the text and hover information to be displayed on the chart
+textinfo <- "label+percent"
+hoverinfo <- "text"
+
+if (sum(df_fatores$QTD) == 0) { 
+  df_fatores <- data.frame("")
+  colnames(df_fatores) = c("")
+  chart <- plot_ly(df_fatores, labels = ~0, values = ~0, type = "pie",
+                                                   hole = 0.5, marker = marker,
+                                                   textinfo = textinfo, hoverinfo = hoverinfo)
+ggplotly(chart)}
+else {
+  
+  chart <- plot_ly(
+  data = df_fatores,
+  x = ~ DESCRICAO,
+  y = ~ QTD,
+  type = 'bar',
+  textfont = list(size=18),
+  marker = marker,
+  text = ~ paste("<br><b>Óbitos:</b>", QTD , "<br><b></b>", paste(round(unname(QTD) / sum(unname(QTD)) * 100,1), "%")),
+  hovertemplate = paste('%{text}<extra></extra>')
+) %>% layout(barmode = 'group', yaxis= list(showticklabels = FALSE, title = ""), 
+             xaxis = list(title="", tickfont = list(size = 14)))
+             
+
+  ggplotly(chart) }
+
+})
+
+```
+
+
 
 
 Row {data-height=400; data-width=200; }
 -------------------------------------
 
-### Principais Sinais ou Sintomas {.no-title}
+### Principais Sinais e Sintomas {.no-title}
 ```{r}
 
 renderTable({
@@ -559,16 +702,18 @@ if (sum(as.numeric(df_sintomas$QTD)) > 0) {
   df_sintomas <- df_sintomas %>% 
   filter(as.numeric(QTD)>0) %>%
   select(QTD, DESCRICAO) %>% 
-  arrange(QTD) 
+  arrange(desc(as.numeric(QTD)))
 
-  df_sintomas$rank <- 1:nrow(df_sintomas)
+  df_sintomas$rank <- row_number(df_sintomas)
 
   df_sintomas <- df_sintomas %>% 
   select(rank, DESCRICAO) %>%
-  filter(row_number()<=3)
-  colnames(df_sintomas) = c("", "Principais Fatores de Risco")
+  filter(row_number()<=3) %>%
+  arrange(as.numeric(rank))
+    
+  colnames(df_sintomas) = c("", "Principais Sinais e Sintomas")
   
-  df_sintomas
+  df_sintomas 
   }
 else {  df_sintomas <- data.frame("")
         colnames(df_sintomas) = c("")
@@ -609,13 +754,15 @@ if (sum(as.numeric(df_fatores$QTD)) > 0) {
   df_fatores <- df_fatores %>% 
   filter(as.numeric(QTD)>0) %>%
   select(QTD, DESCRICAO) %>% 
-  arrange(QTD) 
+  arrange(desc(as.numeric(QTD)))
 
 df_fatores$rank <- 1:nrow(df_fatores)
 
   df_fatores <- df_fatores %>% 
   select(rank, DESCRICAO) %>%
-  filter(row_number()<=3)
+  filter(row_number()<=3) %>%
+  arrange(as.numeric(rank))
+  
   colnames(df_fatores) = c("", "Principais Fatores de Risco")
   
   df_fatores
@@ -691,9 +838,9 @@ renderValueBox({
    # 1- Masculino 2-Feminino 3-Ignorado
    
    switch(input$FiltroAno,
-          "2021" = {sexo <- c(sum(dados$qt_sexo_M_2021), sum(dados$qt_sexo_F_2021), sum(dados$qt_sexo_I_2021))},
-          "2022" = {sexo <- c(sum(dados$qt_sexo_M_2022), sum(dados$qt_sexo_F_2022), sum(dados$qt_sexo_I_2022))},
-          "2023" = {sexo <- c(sum(dados$qt_sexo_M_2023), sum(dados$qt_sexo_F_2023), sum(dados$qt_sexo_I_2023))}
+          "2021" = {sexo <- c(sum(as.numeric(dados$qt_sexo_M_2021)), sum(as.numeric(dados$qt_sexo_F_2021)), sum(as.numeric(dados$qt_sexo_I_2021)))},
+          "2022" = {sexo <- c(sum(as.numeric(dados$qt_sexo_M_2022)), sum(as.numeric(dados$qt_sexo_F_2022)), sum(as.numeric(dados$qt_sexo_I_2022)))},
+          "2023" = {sexo <- c(sum(as.numeric(dados$qt_sexo_M_2023)), sum(as.numeric(dados$qt_sexo_F_2023)), sum(as.numeric(dados$qt_sexo_I_2023)))}
    )
    
    maior_sexo <- which(sexo == max(sexo))
@@ -701,8 +848,8 @@ renderValueBox({
    if (sum(sexo) != 0 ) {                       
          switch(maior_sexo[1],
                 "1" = {valueBox(value = "Masculino", icon = icon("list"), color ="darkblue")},
-                "2" = {valueBox(value = "Feminino ", icon = icon("list"), color ="pink")},
-                "3" = {valueBox(value = "Ignorado ", icon = icon("list"), color ="green")},
+                "2" = {valueBox(value = "Feminino ", icon = icon("list"), color ="darkblue")},
+                "3" = {valueBox(value = "Ignorado ", icon = icon("list"), color ="darkblue")},
                 "0" = {valueBox(value = "   ---   ", color ="darkblue")} 
          )} else {valueBox(value = tags$p("---", style = "color:lightgray; "),
               caption = tags$p("Sexo", style = "color:lightgray; "),
@@ -743,7 +890,7 @@ switch(input$FiltroAno,
                        
    if (sum(escola) != 0 ) {
    switch(maior_escola[1],
-          "1" = {valueBox(value = "Analfabeto   ", icon = icon("list"), color ="darkblue")},
+          "1" = {valueBox(value = "Sem Escolaridade", icon = icon("list"), color ="darkblue")},
           "2" = {valueBox(value = "Fundamental 1", icon = icon("list"), color ="darkblue")},
           "3" = {valueBox(value = "Fundamental 2", icon = icon("list"), color ="darkblue")},
           "4" = {valueBox(value = "Ensino Médio ", color ="darkblue")},
@@ -765,12 +912,12 @@ dados <- df_dados_totais()
 
 #  Raça 1-Branca  2-Preta 3-Amarela 4-Parda 5-Indígena 9-Ignorada
 switch(input$FiltroAno,
-  "2021" = {raca <- c(sum(dados$qt_raca_1_2021), sum(dados$qt_raca_2_2021), sum(dados$qt_raca_3_2021),sum(dados$qt_raca_4_2021), sum(dados$qt_raca_5_2021),sum(dados$qt_raca_9_2021))},
-  "2022" = {raca <- c(sum(dados$qt_raca_1_2022), sum(dados$qt_raca_2_2022), sum(dados$qt_raca_3_2022),sum(dados$qt_raca_4_2022), sum(dados$qt_raca_5_2022),sum(dados$qt_raca_9_2022))},
-  "2023" = {raca <- c(sum(dados$qt_raca_1_2023), sum(dados$qt_raca_2_2023), sum(dados$qt_raca_3_2023),sum(dados$qt_raca_4_2023), sum(dados$qt_raca_5_2023),sum(dados$qt_raca_9_2023))}
+  "2021" = {raca <- c(sum(as.numeric(dados$qt_raca_1_2021)), sum(as.numeric(dados$qt_raca_2_2021)), sum(as.numeric(dados$qt_raca_3_2021)),sum(as.numeric(dados$qt_raca_4_2021)), sum(as.numeric(dados$qt_raca_5_2021)),sum(as.numeric(dados$qt_raca_9_2021)))},
+  "2022" = {raca <- c(sum(as.numeric(dados$qt_raca_1_2022)), sum(as.numeric(dados$qt_raca_2_2022)), sum(as.numeric(dados$qt_raca_3_2022)),sum(as.numeric(dados$qt_raca_4_2022)), sum(as.numeric(dados$qt_raca_5_2022)),sum(as.numeric(dados$qt_raca_9_2022)))},
+  "2023" = {raca <- c(sum(as.numeric(dados$qt_raca_1_2023)), sum(as.numeric(dados$qt_raca_2_2023)), sum(as.numeric(dados$qt_raca_3_2023)),sum(as.numeric(dados$qt_raca_4_2023)), sum(as.numeric(dados$qt_raca_5_2023)),sum(as.numeric(dados$qt_raca_9_2023)))}
    )
    
-   maior_raca <- which(raca == max(raca))
+   maior_raca <- which(raca == max(as.numeric(raca)))
    
    if (sum(raca) != 0 ) {                       
          switch(maior_raca[1],
@@ -779,11 +926,15 @@ switch(input$FiltroAno,
                 "3" = {valueBox(value = "Amarela ", icon = icon("list"), color ="green")},
                 "4" = {valueBox(value = "Parda   ", icon = icon("list"), color ="darkblue")},
                 "5" = {valueBox(value = "Indígnea", icon = icon("list"), color ="pink")},
-                "6" = {valueBox(value = "Ignorada", icon = icon("list"), color ="green")}
+                "9" = {valueBox(value = "Ignorada", icon = icon("list"), color ="green")}
          )} else {valueBox(value = tags$p("---", style = "color:lightgray; "),
               caption = tags$p("Etnia", style = "color:lightgray; "),
               icon = icon("list"), color ="white")}
 })
-
 ```
+Row {data-height=4; data-width=5; }
+-------------------------------------
+
+Fonte : https://opendatasus.saude.gov.br/dataset/srag-2021-a-2023
+
 
