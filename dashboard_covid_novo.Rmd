@@ -17,17 +17,16 @@ output:
 .value-box {
 display: flex;
 align-items: center;
-justify-content: center;
-align-content: center;
+text-align: center;
+height:85%;
 }
-
 .value-box .value {
     color: white;
-    font-size : 140%
+    font-size : 20px
 }
 .value-box .caption {
     color: white;
-    font-size : 105%
+    font-size : 15px
 }
 </style>
 
@@ -62,6 +61,7 @@ library(flexdashboard)
 library(shiny)
 library(shinyWidgets)
 library(knitr)
+library(kableExtra)
 library(plotly)
 
 
@@ -200,9 +200,9 @@ knitr::include_graphics("./imagens/linda.jpg")
 ```
 
 
-Row {data-height=050; data-width=150}
+Row {data-height=050; data-width=100}
 -------------------------------------
-### Total Notificações 
+### Total Notificações {data-height=050; data-width=100}
 ```{r}
  renderValueBox({
   
@@ -230,7 +230,7 @@ Row {data-height=050; data-width=150}
 
 ```
 
-### Cura 
+### Cura {data-height=050; data-width=100}
 
 ```{r}
 renderGauge({
@@ -251,7 +251,7 @@ renderGauge({
 
 ```
 
-### Óbito 
+### Óbito {data-height=050; data-width=100}
 ```{r}
 renderGauge({ 
 dados <- df_dados_totais()
@@ -268,7 +268,7 @@ dados <- df_dados_totais()
   
 ```
     
-### Óbito-Outras Causas
+### Óbito-Outras Causas {data-height=050; data-width=100}
 ```{r}
 renderGauge({ 
 
@@ -287,7 +287,7 @@ renderGauge({
 
 ```
 
-### Ignorado
+### Ignorado {data-height=050; data-width=100}
 ```{r}
 renderGauge({ 
  dados <- df_dados_totais()
@@ -303,22 +303,8 @@ renderGauge({
 })
 
 ```
-Row {data-height=50; data-width=50}
--------------------------------------
 
-### Óbitos - COVID-19
-```{r}
-renderValueBox({
-valueBox(value = tags$p("", style = "font-size: 40px;font-size: 40px;"),
-                   caption = tags$p("Óbitos - COVID-19", style = "color:white;font-size: 20px; "),
-                   icon = icon("list"), color ="orange")
-     
-  })
-
-```
-
-
-Column {.tabset}
+Column {.tabset data-height=900}
 ---
 ### Idade
 
@@ -337,16 +323,12 @@ marker <- list(colors = colors)
 textinfo <- "label+percent"
 hoverinfo <- "text"
 
-
 df_faixa_etaria <- dados %>%
   group_by(FAIXA_ETARIA) %>% summarize(n = length(NU_IDADE_N))
 
-if (nrow(df_faixa_etaria) == 0) { chart <- plot_ly(
-                                            data = df_faixa_etaria,
-                                            x = ~ 0,
-                                            y = ~ 0,
-                                            type = 'bar') 
-
+if (nrow(df_faixa_etaria) == 0) { chart <- plot_ly(df_faixa_etaria, labels = ~0, values = ~0, type = "pie",
+                                            hole = 0.5, marker = marker,
+                                            textinfo = textinfo, hoverinfo = hoverinfo)
    ggplotly(chart)}
 else {
 
@@ -358,7 +340,7 @@ chart <- plot_ly(
   colors = c('#6bbabf', '#60ab3d'),
   text = ~ paste("<br><b>Óbitos:</b>", n , "<br><b></b>", paste(round(unname(n) / sum(unname(n)) * 100,1), "%")),
   hovertemplate = paste('%{text}<extra></extra>')
-) %>% layout(barmode = 'group', yaxis= list(showticklabels = FALSE, title = ""), xaxix = list(title="Faixa Etária"))
+) %>% layout(barmode = 'group', yaxis= list(showticklabels = FALSE, title = ""), xaxis = list(title="Faixa Etária"))
 
 
 ggplotly(chart) }
@@ -367,7 +349,7 @@ ggplotly(chart) }
 })
 ```
 
-### Sexo
+### Gênero
 
 ```{r}
 
@@ -386,20 +368,46 @@ textinfo <- "label+percent"
 hoverinfo <- "text"
 
 if (nrow(df_sexo) == 0) { chart <- plot_ly(df_sexo, labels = ~0, values = ~0, type = "pie",
-                     hole = 0.5, marker = marker,
-                     text = ~paste(CS_SEXO, 0, sep = ": "),
-                     textinfo = textinfo, hoverinfo = hoverinfo)
+                                            hole = 0.5, marker = marker,
+                                            textinfo = textinfo, hoverinfo = hoverinfo)
    ggplotly(chart)}
 else {
 
-df_sexo <- aggregate(dados$CS_SEXO,
+  df_sexo <- aggregate(dados$CS_SEXO,
                      by=list(CS_SEXO=dados$CS_SEXO), FUN=length) 
+  
+df_sexo <- df_sexo %>% 
+  mutate(label = case_when(
+  CS_SEXO == "M" ~ "Masculino",
+  CS_SEXO == "F" ~ "Feminino",
+  CS_SEXO == "I" ~ "Ignorado"))
 
-for (k in 1:nrow(df_sexo)) {
-  if(df_sexo$CS_SEXO[k] == "M") df_sexo$label[k] <- "Masculino"
-  if(df_sexo$CS_SEXO[k] == "F") df_sexo$label[k] <- "Feminino"
-  if(df_sexo$CS_SEXO[k] == "I") df_sexo$label[k] <- "Ignorado"
+chart <- plot_ly(df_sexo, labels = ~label, values = ~x, type = "pie",
+                     hole = 0.5, marker = marker,
+                     text = ~paste(label, " : ", x, " Óbitos"),
+                     textinfo = textinfo, hoverinfo = hoverinfo)
+    
+# customize the layout of the chart, including the title and legend
+  layout(chart, 
+  legend = list(x = 0, y = 1, font = list(width = 26, color = "black")))
+
+  ggplotly(chart)
+
 }
+ 
+})
+
+
+```
+
+### Etnia
+
+```{r}
+
+renderPlotly({
+
+dados <- df_dados_dashboard()    
+df_etnia <- dados
 
 colors <- c("pink", "orange", "blue")
     
@@ -410,7 +418,24 @@ marker <- list(colors = colors)
 textinfo <- "label+percent"
 hoverinfo <- "text"
 
-chart <- plot_ly(df_sexo, labels = ~label, values = ~x, type = "pie",
+if (nrow(df_etnia) == 0) { chart <- plot_ly(df_etnia, labels = ~0, values = ~0, type = "pie",
+                                            hole = 0.5, marker = marker,
+                                            textinfo = textinfo, hoverinfo = hoverinfo)
+   ggplotly(chart)}
+else {
+
+  df_etnia <- aggregate(dados$CS_RACA,
+                     by=list(CS_RACA=dados$CS_RACA), FUN=length) 
+df_etnia <- df_etnia %>% 
+  mutate(label = case_when(
+  CS_RACA == 1 ~ "Branca",
+  CS_RACA == 2 ~ "Preta",
+  CS_RACA == 3 ~ "Amarela",
+  CS_RACA == 4 ~ "Parda",
+  CS_RACA == 5 ~ "Indígena",
+  CS_RACA == 9 ~ "Ignorada"))
+
+chart <- plot_ly(df_etnia, labels = ~label, values = ~x, type = "pie",
                      hole = 0.5, marker = marker,
                      text = ~paste(label, " : ", x, " Óbitos"),
                      textinfo = textinfo, hoverinfo = hoverinfo)
@@ -433,6 +458,59 @@ chart <- plot_ly(df_sexo, labels = ~label, values = ~x, type = "pie",
 
 ```{r}
 
+renderPlotly({
+
+dados <- df_dados_dashboard()    
+df_escola <- dados
+
+colors <- c("pink", "orange", "blue")
+    
+# set the marker properties, including the colors and line width
+marker <- list(colors = colors)
+    
+# define the text and hover information to be displayed on the chart
+textinfo <- "label+percent"
+hoverinfo <- "text"
+
+df_escola[is.na(df_escola)] <- 9  
+
+if (nrow(df_escola) == 0) { chart <- plot_ly(df_escola, labels = ~0, values = ~0, type = "pie",
+                     hole = 0.5, marker = marker,
+                     text = ~paste(CS_ESCOL_N, 0, sep = ": "),
+                     textinfo = textinfo, hoverinfo = hoverinfo)
+   ggplotly(chart)}
+else {
+
+  df_escola <- aggregate(df_escola$CS_ESCOL_N,
+                     by=list(CS_ESCOL_N=df_escola$CS_ESCOL_N), FUN=length) 
+  
+df_escola <- df_escola %>% 
+  mutate(label = case_when(
+  CS_ESCOL_N == 0 ~ "Sem Escolaridade",
+  CS_ESCOL_N == 1 ~ "Fundamental 1o Ciclo",
+  CS_ESCOL_N == 2 ~ "Fundamental 2o Ciclo",
+  CS_ESCOL_N == 3 ~ "Ensino Médio",
+  CS_ESCOL_N == 4 ~ "Ensino Superior",
+  CS_ESCOL_N == 5 ~ "Não Se Aplica",
+  (CS_ESCOL_N == 9 | CS_ESCOL_N == "" | is.na(CS_ESCOL_N)) ~ "Ignorado"))
+
+chart <- plot_ly(df_escola, labels = ~label, values = ~x, type = "pie",
+                     hole = 0.5, marker = marker,
+                     text = ~paste(label, " : ", x, " Óbitos"),
+                     textinfo = textinfo, hoverinfo = hoverinfo)
+    
+# customize the layout of the chart, including the title and legend
+  layout(chart, 
+  legend = list(x = 0, y = 1, font = list(width = 20, color = "black")))
+
+  ggplotly(chart)
+
+}
+ 
+})
+
+
+
 ```
 
 ### Fatores de Risco 
@@ -448,24 +526,113 @@ chart <- plot_ly(df_sexo, labels = ~label, values = ~x, type = "pie",
 
 ```
 
-Row {data-height=150; data-width=150}
+
+Row {data-height=400; data-width=200; }
 -------------------------------------
 
-### Óbitos - Fatores de Risco
+### Principais Sinais ou Sintomas {.no-title}
 ```{r}
+
+renderTable({
+  dados <- df_dados_dashboard()
+  
+df_sintomas <- data.frame(SINTOMAS= c("TOSSE","FEBRE","GARGANTA","DISPNEIA","DESC_RESP","SATURACAO","DIARREIA",
+                              "VOMITO","DOR_ABD","FADIGA","PERD_OLFT","PERD_PALA"), 
+                     DESCRICAO= c("Tosse","Febre","Dor de Garganta","Dispnéia","Desconforto Respiratório","Saturação <95%","Diarréia",
+                              "Vômito","Dor Abdominal","Fadiga","Perda de Olfato","Perda de Paladar"),
+                     QTD=c(0))
+df_sintomas$QTD[df_sintomas$SINTOMAS=="TOSSE"] <- dados %>% filter(TOSSE=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="FEBRE"] <- dados %>% filter(FEBRE=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="GARGANTA"] <- dados %>% filter(GARGANTA=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="DISPNEIA"] <- dados %>% filter(DISPNEIA=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="DESC_RESP"] <- dados %>% filter(DESC_RESP=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="SATURACAO"] <- dados %>% filter(SATURACAO=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="DIARREIA"] <- dados %>% filter(DIARREIA=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="VOMITO"] <- dados %>% filter(VOMITO=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="DOR_ABD"] <- dados %>% filter(DOR_ABD=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="FADIGA"] <- dados %>% filter(FADIGA=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="PERD_OLFT"] <- dados %>% filter(PERD_OLFT=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="PERD_PALA"] <- dados %>% filter(PERD_PALA=="1") %>% count()
+
+if (sum(as.numeric(df_sintomas$QTD)) > 0) {
+  
+  df_sintomas <- df_sintomas %>% 
+  filter(as.numeric(QTD)>0) %>%
+  select(QTD, DESCRICAO) %>% 
+  arrange(QTD) 
+
+  df_sintomas$rank <- 1:nrow(df_sintomas)
+
+  df_sintomas <- df_sintomas %>% 
+  select(rank, DESCRICAO) %>%
+  filter(row_number()<=3)
+  colnames(df_sintomas) = c("", "Principais Fatores de Risco")
+  
+  df_sintomas
+  }
+else {  df_sintomas <- data.frame("")
+        colnames(df_sintomas) = c("")
+        head(df_sintomas)}
+
+})
+
 
 ```
 
-### Óbitos - Sinais e Sintomas
+### Principais Fatores de Risco {.no-title}
 ```{r}
+
+renderTable({
+  dados <- df_dados_dashboard()
+df_fatores <- data.frame(
+    FATOR= c("PUERPERA", "CARDIOPATI","HEMATOLOGI","SIND_DOWN","HEPATICA","ASMA","DIABETES","NEUROLOGIC","PNEUMOPATI","IMUNODEPRE","RENAL",
+    "OBESIDADE"),
+    DESCRICAO= c("Puérpera", "Doença Cardiovascular","Doença Hematológica","Síndrome de Down","Doença Hepática", "Asma","Diabetes Mellitus","Doença Neurológica","Pneumopatia","Imunodeficiência","Doença Renal","Obesidade"),
+    QTD=c(0))
+
+df_fatores$QTD[df_fatores$FATOR=="PUERPERA"] <- dados %>% filter(PUERPERA=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="CARDIOPATI"] <- dados %>% filter(CARDIOPATI=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="HEMATOLOGI"] <- dados %>% filter(HEMATOLOGI=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="SIND_DOWN"] <- dados %>% filter(SIND_DOWN=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="HEPATICA"] <- dados %>% filter(HEPATICA=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="ASMA"] <- dados %>% filter(ASMA=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="DIABETES"] <- dados %>% filter(DIABETES=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="NEUROLOGIC"] <- dados %>% filter(NEUROLOGIC=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="PNEUMOPATI"] <- dados %>% filter(PNEUMOPATI=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="IMUNODEPRE"] <- dados %>% filter(IMUNODEPRE=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="RENAL"] <- dados %>% filter(RENAL=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="OBESIDADE"] <- dados %>% filter(OBESIDADE=="1") %>% count()
+
+
+if (sum(as.numeric(df_fatores$QTD)) > 0) {
+  
+  df_fatores <- df_fatores %>% 
+  filter(as.numeric(QTD)>0) %>%
+  select(QTD, DESCRICAO) %>% 
+  arrange(QTD) 
+
+df_fatores$rank <- 1:nrow(df_fatores)
+
+  df_fatores <- df_fatores %>% 
+  select(rank, DESCRICAO) %>%
+  filter(row_number()<=3)
+  colnames(df_fatores) = c("", "Principais Fatores de Risco")
+  
+  df_fatores
+  }
+else {  df_fatores <- data.frame("")
+        colnames(df_fatores) = c("")
+        head(df_fatores)}
+
+})
 
 ```
 
 
-Row {data-height=050; data-width=150}
+Row {data-height=100; data-width=100}
 -------------------------------------
 
-### Total Óbitos 
+### Óbitos Total
 ```{r}
 renderValueBox({
   
@@ -483,19 +650,13 @@ renderValueBox({
               caption = tags$p("Total", style = "color:lightgray;font-size: 20px; "),
               icon = icon("list"), color ="white")
    } else {
-          valueBox(value = tags$p(format(total_obito, big.mark = "."), style = "font-size: 40px;font-size: 40px;"),
-                   caption = tags$p("Total", style = "color:white;font-size: 20px; "),
+          valueBox(value = tags$p(format(total_obito, big.mark = "."), style = "font-size: 40px"),
+                   caption = tags$p("Total Óbitos", style = "color:white;font-size: 20px; "),
                    icon = icon("list"), color ="red")
-     
-     
      }
-   
-  
-})
+   })
 
 ```
-
-
 
 ### Média Idade 
 ```{r}
@@ -520,7 +681,7 @@ renderValueBox({
 
 ```
 
-### Óbitos Sexo 
+### Gênero 
 
 ```{r}
 renderValueBox({ 
@@ -597,7 +758,7 @@ switch(input$FiltroAno,
 })
 ```
     
-### Raça
+### Etnia
 ```{r}
 renderValueBox({ 
 dados <- df_dados_totais()
@@ -620,7 +781,7 @@ switch(input$FiltroAno,
                 "5" = {valueBox(value = "Indígnea", icon = icon("list"), color ="pink")},
                 "6" = {valueBox(value = "Ignorada", icon = icon("list"), color ="green")}
          )} else {valueBox(value = tags$p("---", style = "color:lightgray; "),
-              captio = tags$p("Raça", style = "color:lightgray; "),
+              caption = tags$p("Etnia", style = "color:lightgray; "),
               icon = icon("list"), color ="white")}
 })
 

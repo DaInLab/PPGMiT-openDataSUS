@@ -111,6 +111,10 @@ df_obitos <- df_covid %>%
   arrange(ANO_EVOLUCA,SG_UF_NOT, ID_MUNICIP)
 
 # Faixa Etaria Obitos
+# Sintomas
+
+df_obitos$SINTOMAS <- ""
+df_obitos$SINAIS <- ""
 df_obitos <- df_obitos %>% 
   mutate(FAIXA_ETARIA = case_when(
   NU_IDADE_N <=10 ~ "0-10 anos",
@@ -118,7 +122,20 @@ df_obitos <- df_obitos %>%
   NU_IDADE_N >=21 & NU_IDADE_N<= 50~ "21-50 anos ",
   NU_IDADE_N >=51 & NU_IDADE_N<= 70~ "51-70 anos ",
   NU_IDADE_N >=71 & NU_IDADE_N<= 80~ "71-80 anos ",
-  NU_IDADE_N >=81 ~ "> 81 anos "))
+  NU_IDADE_N >=81 ~ "81 ou mais")) %>%
+  mutate(FATORES = case_when(FEBRE == "1"     ~ paste(FATORES, str_trim("FEBRE"), sep="_"), TRUE ~ paste(FATORES,str_trim(""))))  %>%
+  mutate(FATORES = case_when(TOSSE == "1"     ~ paste(FATORES, str_trim("TOSSE"), sep="_"), TRUE ~ paste(FATORES,str_trim(""))))  %>%
+  mutate(FATORES = case_when(FADIGA == "1"    ~ paste(FATORES, str_trim("FADIGA"), sep="_"), TRUE ~ paste(FATORES,str_trim(""))))  %>%  
+  mutate(FATORES = case_when(GARGANTA  == "1" ~ paste(FATORES, str_trim("DOR DE GARGANTA"), sep="_"), TRUE ~ paste(FATORES,str_trim("")))) %>%         
+  mutate(FATORES = case_when(DISPNEIA  == "1" ~ paste(FATORES, str_trim("DISPNEIA"), sep="_"), TRUE ~ paste(FATORES,str_trim("")))) %>%         
+  mutate(FATORES = case_when(DESC_RESP == "1" ~ paste(FATORES, str_trim("DESCONFORTO RESPIRATÓRIO"), sep="_"), TRUE ~ paste(FATORES,str_trim("")))) %>%         
+  mutate(FATORES = case_when(SATURACAO == "1" ~ paste(FATORES, str_trim("SATURAÇÃO < 95%"), sep="_"), TRUE ~ paste(FATORES,str_trim(""))))  %>%         
+  mutate(FATORES = case_when(DIARREIA == "1"  ~ paste(FATORES, str_trim("DIARRÉIA"), sep="_"), TRUE ~ paste(FATORES,str_trim(""))))  %>%         
+  mutate(FATORES = case_when(VOMITO == "1"    ~ paste(FATORES, str_trim("VÔMITO"), sep="_"), TRUE ~ paste(FATORES,str_trim(""))))  %>%         
+  mutate(FATORES = case_when(DOR_ABD == "1"   ~ paste(FATORES, str_trim("DOR ABDOMINAL"), sep="_"), TRUE ~ paste(FATORES,str_trim(""))))  %>%
+  mutate(FATORES = case_when(PERD_OLFT == "1" ~ paste(FATORES, str_trim("PERDA DE OLFATO"), sep="_"), TRUE ~ paste(FATORES,str_trim(""))))  %>%         
+  mutate(FATORES = case_when(PERD_PALA == "1" ~ paste(FATORES, str_trim("PERDA DE PALADAR"), sep="_"), TRUE ~ paste(FATORES,str_trim(""))))  %>%         
+  mutate(FATORES = case_when(OUTRO_SIN == "1" ~ paste(FATORES, str_trim(OUTRO_DES), sep="_"), TRUE ~ paste(FATORES,str_trim(""))))  
 
 # # Criando arquivo do dataframe df_covid_obitos (Classificacao Final : SRAG por COVID-19 e Evolucao do Caso : Obito)
 write_csv2(df_obitos, file='./dados/COVID_OBITOS.csv')
@@ -133,7 +150,39 @@ df_dashboard <- df_obitos %>%
          CS_ESCOL_N,
          CS_RACA,
          NU_IDADE_N,
-         FAIXA_ETARIA)
+         FAIXA_ETARIA,
+         # Sintomas
+         FEBRE,
+         TOSSE,
+         GARGANTA,
+         DISPNEIA,
+         DESC_RESP,
+         SATURACAO,
+         DIARREIA,
+         VOMITO,
+         DOR_ABD,
+         FADIGA,
+         PERD_OLFT,
+         PERD_PALA,
+         OUTRO_SIN,
+         OUTRO_DES,
+         #Fator de Risco
+         FATOR_RISC,
+         PUERPERA,
+         CARDIOPATI,
+         HEMATOLOGI,
+         SIND_DOWN,
+         HEPATICA,
+         ASMA,
+         DIABETES,
+         NEUROLOGIC,
+         PNEUMOPATI,
+         IMUNODEPRE,
+         RENAL,
+         OBESIDADE,
+         OBES_IMC,
+         OUT_MORBI,
+         MORB_DESC)
 
 # # Criando arquivo do dataframe df_covid_obitos (Classificacao Final : SRAG por COVID-19 e Evolucao do Caso : Obito)
 write_csv2(df_dashboard, file='./dados/DASHBOARD.csv')
