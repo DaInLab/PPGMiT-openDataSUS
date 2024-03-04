@@ -9,6 +9,7 @@ output:
     source_code: embed
     navbar:
       - { title: "Sobre Mim", href: "https://www.linkedin.com/in/marcelo-j-santos/", align: right }
+      - { icon: fa-github, href: "https://github.com/DaInLab/PPGMiT-openDataSUS.git", align: right }
 ---
 
 <style type="text/css">
@@ -332,7 +333,7 @@ renderGauge({
 
 Column {.tabset data-height=900}
 ---
-### Idade
+### Faixa Etária
 
 ```{r}
 
@@ -366,7 +367,7 @@ chart <- plot_ly(
   colors = c('#6bbabf', '#60ab3d'),
   text = ~ paste("<br><b>Óbitos:</b>", n , "<br><b></b>", paste(round(unname(n) / sum(unname(n)) * 100,1), "%")),
   hovertemplate = paste('%{text}<extra></extra>')
-) %>% layout(barmode = 'group', yaxis= list(showticklabels = FALSE, title = ""), xaxis = list(title="Faixa Etária"))
+) %>% layout(barmode = 'group', yaxis= list(showticklabels = FALSE, title = ""), xaxis = list(title=""))
 
 
 ggplotly(chart) }
