@@ -1,0 +1,60 @@
+---
+title: "Untitled"
+output: 
+  flexdashboard::flex_dashboard:
+   vertical_layout: fill 
+   theme: 
+      version: 4
+      bootswatch: minty
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(gt)
+library(dplyr)
+```
+
+Row {data-height=650}
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+mydf <- data.frame(
+  val = c("Val1", "Val2", "Val3", "Val4", "Val5", "Val6"),
+  grp = c("Group 1", "Group 2", "Group 2", "Group 1", "Group 2", "Group 1"),
+  text1 = c("abc", "xyz", "pqr", "lmn", "zxcv", "fgf"),
+  text2 = c("ABC", "XYZ", "PQR", "LMN", "ZXCV", "FGF")
+)
+
+UF <- c('**TODAS**','AC','AL','AM','AP','BA','CE','ES','GO','MA','MG','MS','MT','PA','PB','PE','PI','PR','RJ','RN','RO','RR','RS','SC','SE','SP','TO')
+
+# Importacao do arquivo municipios.csv
+df_municipios <- read.csv('./dados/MUNICIPIOS.csv', sep=";") %>% arrange(SG_UF_NOT,ID_MUNICIP)
+
+selectInput("Group", label = "Group", choices = UF, selected = UF[1])
+
+g.choices <- reactive({
+  df_municipios %>%
+    filter(SG_UF_NOT %in% input$Group)
+})
+
+renderUI({
+  selectInput("Value",
+    label = "Value",
+    choices = unique(g.choices()$ID_MUNICIP)
+  )
+})
+```
+
+Outputs {data-width=750}
+-----------------------------------------------------------------------
+
+```{r}
+render_gt({
+  mydf %>%
+    filter(val %in% input$Value, SG_UF_NOT %in% input$Group) %>%
+    gt()
+})
+```
