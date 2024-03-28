@@ -1,11 +1,11 @@
 name: dashboard_covid_novo
-title: dashboard_covid_novo
+title:
 username: ppgmitdashboardcovid
 account: ppgmitdashboardcovid
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 11319944
-bundleId: 8293488
+bundleId: 8412761
 url: https://ppgmitdashboardcovid.shinyapps.io/dashboard_covid_novo/
 version: 1
 asMultiple: FALSE

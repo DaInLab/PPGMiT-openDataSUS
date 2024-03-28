@@ -9,12 +9,13 @@ output:
     source_code: embed
     navbar:
       - { title: "Sobre Mim", href: "https://www.linkedin.com/in/marcelo-j-santos/", align: right }
+      - { icon: fa-github, href: "https://github.com/DaInLab/PPGMiT-openDataSUS.git", align: right }
 ---
 
 <style type="text/css">
 
 .html-widget.gauge svg {
-  height: 40%; 
+  height: 80px; 
   font-size:80%;
 }
 
@@ -243,7 +244,7 @@ knitr::include_graphics("./imagens/linda.jpg")
 ```
 
 
-Row {data-width=250}
+Row {data-width=50}
 -------------------------------------
 ### Total Notificações 
 ```{r}
@@ -332,7 +333,7 @@ renderGauge({
 
 Column {.tabset data-height=900}
 ---
-### Idade
+### Faixa Etária
 
 ```{r}
 
@@ -366,7 +367,7 @@ chart <- plot_ly(
   colors = c('#6bbabf', '#60ab3d'),
   text = ~ paste("<br><b>Óbitos:</b>", n , "<br><b></b>", paste(round(unname(n) / sum(unname(n)) * 100,1), "%")),
   hovertemplate = paste('%{text}<extra></extra>')
-) %>% layout(barmode = 'group', yaxis= list(showticklabels = FALSE, title = ""), xaxis = list(title="Faixa Etária"))
+) %>% layout(barmode = 'group', yaxis= list(showticklabels = FALSE, title = ""), xaxis = list(title=""))
 
 
 ggplotly(chart) }
@@ -549,9 +550,9 @@ renderPlotly({
 dados <- df_dados_dashboard()      
 
 df_sintomas <- data.frame(SINTOMAS= c("TOSSE","FEBRE","GARGANTA","DISPNEIA","DESC_RESP","SATURACAO","DIARREIA",
-                              "VOMITO","DOR_ABD","FADIGA","PERD_OLFT","PERD_PALA"), 
+                              "VOMITO","DOR_ABD","FADIGA","PERD_OLFT","PERD_PALA", "OUTRO_SIN"), 
                      DESCRICAO= c("Tosse","Febre","Dor de Garganta","Dispnéia","Desconforto Respiratório","Saturação <95%","Diarréia",
-                              "Vômito","Dor Abdominal","Fadiga","Perda de Olfato","Perda de Paladar"),
+                              "Vômito","Dor Abdominal","Fadiga","Perda de Olfato","Perda de Paladar", "Outros Sintomas"),
                      QTD=c(0))
 df_sintomas$QTD[df_sintomas$SINTOMAS=="TOSSE"] <- dados %>% filter(TOSSE=="1") %>% count()
 df_sintomas$QTD[df_sintomas$SINTOMAS=="FEBRE"] <- dados %>% filter(FEBRE=="1") %>% count()
@@ -565,6 +566,7 @@ df_sintomas$QTD[df_sintomas$SINTOMAS=="DOR_ABD"] <- dados %>% filter(DOR_ABD=="1
 df_sintomas$QTD[df_sintomas$SINTOMAS=="FADIGA"] <- dados %>% filter(FADIGA=="1") %>% count()
 df_sintomas$QTD[df_sintomas$SINTOMAS=="PERD_OLFT"] <- dados %>% filter(PERD_OLFT=="1") %>% count()
 df_sintomas$QTD[df_sintomas$SINTOMAS=="PERD_PALA"] <- dados %>% filter(PERD_PALA=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="OUTRO_SIN"] <- dados %>% filter(OUTRO_SIN=="1") %>% count()
 
 df_sintomas$QTD <- as.numeric(df_sintomas$QTD)
 
@@ -613,8 +615,8 @@ dados <- df_dados_dashboard()
 
 df_fatores <- data.frame(
   FATOR= c("PUERPERA", "CARDIOPATI","HEMATOLOGI","SIND_DOWN","HEPATICA","ASMA","DIABETES","NEUROLOGIC","PNEUMOPATI","IMUNODEPRE","RENAL",
-           "OBESIDADE"),
-  DESCRICAO= c("Puérpera", "Doença Cardiovascular","Doença Hematológica","Síndrome de Down","Doença Hepática", "Asma","Diabetes Mellitus","Doença Neurológica","Pneumopatia","Imunodeficiência","Doença Renal","Obesidade"),
+           "OBESIDADE", "OUT_MORBI"),
+  DESCRICAO= c("Puérpera", "Doença Cardiovascular","Doença Hematológica","Síndrome de Down","Doença Hepática", "Asma","Diabetes Mellitus","Doença Neurológica","Pneumopatia","Imunodeficiência","Doença Renal","Obesidade", "Outros Fatores"),
   QTD=c(0))
 
 df_fatores$QTD[df_fatores$FATOR=="PUERPERA"] <- dados %>% filter(PUERPERA=="1") %>% count()
@@ -629,6 +631,7 @@ df_fatores$QTD[df_fatores$FATOR=="PNEUMOPATI"] <- dados %>% filter(PNEUMOPATI=="
 df_fatores$QTD[df_fatores$FATOR=="IMUNODEPRE"] <- dados %>% filter(IMUNODEPRE=="1") %>% count()
 df_fatores$QTD[df_fatores$FATOR=="RENAL"] <- dados %>% filter(RENAL=="1") %>% count()
 df_fatores$QTD[df_fatores$FATOR=="OBESIDADE"] <- dados %>% filter(OBESIDADE=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="OUT_MORBI"] <- dados %>% filter(OUT_MORBI=="1") %>% count()
 
 df_fatores$QTD <- as.numeric(df_fatores$QTD)
 
@@ -680,9 +683,9 @@ renderTable({
   dados <- df_dados_dashboard()
   
 df_sintomas <- data.frame(SINTOMAS= c("TOSSE","FEBRE","GARGANTA","DISPNEIA","DESC_RESP","SATURACAO","DIARREIA",
-                              "VOMITO","DOR_ABD","FADIGA","PERD_OLFT","PERD_PALA"), 
+                              "VOMITO","DOR_ABD","FADIGA","PERD_OLFT","PERD_PALA", "OUTRO_SIN"), 
                      DESCRICAO= c("Tosse","Febre","Dor de Garganta","Dispnéia","Desconforto Respiratório","Saturação <95%","Diarréia",
-                              "Vômito","Dor Abdominal","Fadiga","Perda de Olfato","Perda de Paladar"),
+                              "Vômito","Dor Abdominal","Fadiga","Perda de Olfato","Perda de Paladar", "Outros Sintomas"),
                      QTD=c(0))
 df_sintomas$QTD[df_sintomas$SINTOMAS=="TOSSE"] <- dados %>% filter(TOSSE=="1") %>% count()
 df_sintomas$QTD[df_sintomas$SINTOMAS=="FEBRE"] <- dados %>% filter(FEBRE=="1") %>% count()
@@ -696,6 +699,7 @@ df_sintomas$QTD[df_sintomas$SINTOMAS=="DOR_ABD"] <- dados %>% filter(DOR_ABD=="1
 df_sintomas$QTD[df_sintomas$SINTOMAS=="FADIGA"] <- dados %>% filter(FADIGA=="1") %>% count()
 df_sintomas$QTD[df_sintomas$SINTOMAS=="PERD_OLFT"] <- dados %>% filter(PERD_OLFT=="1") %>% count()
 df_sintomas$QTD[df_sintomas$SINTOMAS=="PERD_PALA"] <- dados %>% filter(PERD_PALA=="1") %>% count()
+df_sintomas$QTD[df_sintomas$SINTOMAS=="OUTRO_SIN"] <- dados %>% filter(OUTRO_SIN=="1") %>% count()
 
 if (sum(as.numeric(df_sintomas$QTD)) > 0) {
   
@@ -731,8 +735,8 @@ renderTable({
   dados <- df_dados_dashboard()
 df_fatores <- data.frame(
     FATOR= c("PUERPERA", "CARDIOPATI","HEMATOLOGI","SIND_DOWN","HEPATICA","ASMA","DIABETES","NEUROLOGIC","PNEUMOPATI","IMUNODEPRE","RENAL",
-    "OBESIDADE"),
-    DESCRICAO= c("Puérpera", "Doença Cardiovascular","Doença Hematológica","Síndrome de Down","Doença Hepática", "Asma","Diabetes Mellitus","Doença Neurológica","Pneumopatia","Imunodeficiência","Doença Renal","Obesidade"),
+    "OBESIDADE", "OUT_MORBI"),
+    DESCRICAO= c("Puérpera", "Doença Cardiovascular","Doença Hematológica","Síndrome de Down","Doença Hepática", "Asma","Diabetes Mellitus","Doença Neurológica","Pneumopatia","Imunodeficiência","Doença Renal","Obesidade", "Outros Fatores"),
     QTD=c(0))
 
 df_fatores$QTD[df_fatores$FATOR=="PUERPERA"] <- dados %>% filter(PUERPERA=="1") %>% count()
@@ -747,6 +751,7 @@ df_fatores$QTD[df_fatores$FATOR=="PNEUMOPATI"] <- dados %>% filter(PNEUMOPATI=="
 df_fatores$QTD[df_fatores$FATOR=="IMUNODEPRE"] <- dados %>% filter(IMUNODEPRE=="1") %>% count()
 df_fatores$QTD[df_fatores$FATOR=="RENAL"] <- dados %>% filter(RENAL=="1") %>% count()
 df_fatores$QTD[df_fatores$FATOR=="OBESIDADE"] <- dados %>% filter(OBESIDADE=="1") %>% count()
+df_fatores$QTD[df_fatores$FATOR=="OUT_MORBI"] <- dados %>% filter(OUT_MORBI=="1") %>% count()
 
 
 if (sum(as.numeric(df_fatores$QTD)) > 0) {
@@ -843,7 +848,7 @@ renderValueBox({
           "2023" = {sexo <- c(sum(as.numeric(dados$qt_sexo_M_2023)), sum(as.numeric(dados$qt_sexo_F_2023)), sum(as.numeric(dados$qt_sexo_I_2023)))}
    )
    
-   maior_sexo <- which(sexo == max(sexo))
+   maior_sexo <- which(sexo == max(as.numeric(sexo)))
    
    if (sum(sexo) != 0 ) {                       
          switch(maior_sexo[1],
@@ -875,18 +880,15 @@ dados <- df_dados_totais()
 
 switch(input$FiltroAno,
  "2021" = {escola <- 
-  c(sum(dados$qt_escola_0_2021),sum(dados$qt_escola_1_2021),sum(dados$qt_escola_2_2021),sum(dados$qt_escola_3_2021),sum(dados$qt_escola_4_2021),
-    sum(dados$qt_escola_5_2021),sum(dados$qt_escola_9_2021))},
+  c(sum(as.numeric(dados$qt_escola_0_2021)),sum(as.numeric(dados$qt_escola_1_2021)),sum(as.numeric(dados$qt_escola_2_2021)),sum(as.numeric(dados$qt_escola_3_2021)),sum(as.numeric(dados$qt_escola_4_2021)),sum(as.numeric(dados$qt_escola_5_2021)),sum(as.numeric(dados$qt_escola_9_2021)))},
   "2022" = {escola <-  
-  c(sum(dados$qt_escola_0_2022),sum(dados$qt_escola_1_2022),sum(dados$qt_escola_2_2022),sum(dados$qt_escola_3_2022),sum(dados$qt_escola_4_2022),
-    sum(dados$qt_escola_5_2022),sum(dados$qt_escola_9_2022))},
-  "2023" = {escola <- 
-    c(sum(dados$qt_escola_0_2023),sum(dados$qt_escola_1_2023),sum(dados$qt_escola_2_2023),sum(dados$qt_escola_3_2023),sum(dados$qt_escola_4_2023),
-    sum(dados$qt_escola_5_2023),sum(dados$qt_escola_9_2023))}
+  c(sum(as.numeric(dados$qt_escola_0_2022)),sum(as.numeric(dados$qt_escola_1_2022)),sum(as.numeric(dados$qt_escola_2_2022)),sum(as.numeric(dados$qt_escola_3_2022)),sum(as.numeric(dados$qt_escola_4_2022)),sum(as.numeric(dados$qt_escola_5_2022)),sum(as.numeric(dados$qt_escola_9_2022)))},
+ "2023" = {escola <- 
+    c(sum(as.numeric(dados$qt_escola_0_2023)),sum(as.numeric(dados$qt_escola_1_2023)),sum(as.numeric(dados$qt_escola_2_2023)),sum(as.numeric(dados$qt_escola_3_2023)),sum(as.numeric(dados$qt_escola_4_2023)),sum(as.numeric(dados$qt_escola_5_2023)),sum(as.numeric(dados$qt_escola_9_2023)))}
 )
    
 
-   maior_escola <- which(escola == max(escola))
+   maior_escola <- which(escola == max(as.numeric(escola)))
                        
    if (sum(escola) != 0 ) {
    switch(maior_escola[1],
@@ -896,7 +898,7 @@ switch(input$FiltroAno,
           "4" = {valueBox(value = "Ensino Médio ", color ="darkblue")},
           "5" = {valueBox(value = "Ens. Superior", icon = icon("list"), color ="darkblue")},
           "6" = {valueBox(value = "Não se aplica", icon = icon("list"), color ="darkblue")},
-          "7" = {valueBox(value = "Ignorado     ", icon = icon("list"), color ="darkblue")}
+          "9" = {valueBox(value = "Ignorado     ", icon = icon("list"), color ="darkblue")}
    )}
    else {valueBox(value = tags$p("---", style = "color:lightgray; "),
               captio = tags$p("Escolaridade", style = "color:lightgray; "),
