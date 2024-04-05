@@ -4,7 +4,9 @@ Aluno Pos Graduação: Marcelo José dos Santos
 https://www.linkedin.com/in/marcelo-j-santos/
 
 Este trabalho propõe o desenvolvimento de um painel de informações de acesso público, chamado dashboard, que apresenta dados abertos sobre os óbitos ocorridos durante a pandemia de COVID-19 no Brasil. 
+
 Utilizou-se uma metodologia de Ciência de Dados e uma análise exploratória de um conjunto de dados abertos existente no repositório do Ministério da Saúde do Brasil (OpenDataSUS). 
+
 Este dashboard oferece uma exibição de dados abertos consolidados por meio de artefatos estatísticos e gráficos criados utilizando a linguagem de programação R.
 
 ## Fonte : https://opendatasus.saude.gov.br/dataset/srag-2021-a-2023
