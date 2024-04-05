@@ -22,9 +22,10 @@ Este dashboard oferece uma exibição de dados abertos consolidados por meio de 
 \codigo : Contém arquivo do codigo fonte usado na importacao e processamento dos dados brutos 
           01_dashboard_covid.R 
 
-\ : Pasta raiz onde contem o arquivo codigo fonte do dashboard 
-          dashboard_covid_novo.Rmd
-
+\ : Pasta raiz 
+     - o arquivo codigo fonte do dashboard : dashboard_covid_novo.Rmd
+     - o arquivo do Projeto R : PPGMiT-openDataSUS.Rproj
+          
 Software Registrado no INPI sob Numero: 
 
 Bauru 25 de Março de 2024.
