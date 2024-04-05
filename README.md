@@ -13,18 +13,21 @@ Este dashboard oferece uma exibição de dados abertos consolidados por meio de 
 # Internet : https://ppgmitdashboardcovid.shinyapps.io/dashboard_covid_novo/
 
 # Pastas do projeto : 
-\documentos : Contém todos os documentos do projeto : openDataSUS, apresentacao da Defesa, documento da Defesa, Dicionario de dados
+
+\ : Pasta raiz 
+     - o arquivo codigo fonte do dashboard : dashboard_covid_novo.Rmd
+     - o arquivo do Projeto R : PPGMiT-openDataSUS.Rproj
+
+\codigo : Contém arquivo do codigo fonte usado na importacao e processamento dos dados brutos 
+          01_dashboard_covid.R 
 
 \dados : Contém os arquivos com os dados brutos do projeto.
          - opendataSUS : INFLUD23*, INFLUD22*, INFLUD21*
          - arquivos de gerados no processamento dos dados brutos : MUNICIPIOS.CSV, COVID.CSV, COVID_OBITOS.CSV, COVID_TOTAIS.CSV, DASHBOARD.CSV
 
-\codigo : Contém arquivo do codigo fonte usado na importacao e processamento dos dados brutos 
-          01_dashboard_covid.R 
+\documentos : Contém todos os documentos do projeto : openDataSUS, apresentacao da Defesa, documento da Defesa, Dicionario de dados
 
-\ : Pasta raiz 
-     - o arquivo codigo fonte do dashboard : dashboard_covid_novo.Rmd
-     - o arquivo do Projeto R : PPGMiT-openDataSUS.Rproj
+\imagens : Arquivo de imagens utilizadas no dashboard.
           
 Software Registrado no INPI sob Numero: 
 
