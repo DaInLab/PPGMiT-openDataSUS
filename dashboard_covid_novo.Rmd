@@ -586,6 +586,9 @@ if (sum(df_sintomas$QTD) == 0) {
 ggplotly(chart)}
 else {
   
+  df_sintomas <- df_sintomas %>% 
+  arrange(desc(as.numeric(QTD)))
+
   chart <- plot_ly(
   data = df_sintomas,
   x = ~ DESCRICAO,
@@ -595,8 +598,8 @@ else {
   marker = marker,
   text = ~ paste("<br><b>Óbitos:</b>", QTD , "<br><b></b>", paste(round(unname(QTD) / sum(unname(QTD)) * 100,1), "%")),
   hovertemplate = paste('%{text}<extra></extra>')
-) %>% layout(barmode = 'group', yaxis= list(showticklabels = FALSE, title = ""), 
-             xaxis = list(title="", tickfont = list(size = 14)))
+) %>% layout(barmode = 'group', yaxis= list(showticklabels = FALSE, title = ""),
+             xaxis = list(categoryorder = "total descending", title="", tickfont = list(size = 14)))
   
   ggplotly(chart) }
 
@@ -661,7 +664,7 @@ else {
   text = ~ paste("<br><b>Óbitos:</b>", QTD , "<br><b></b>", paste(round(unname(QTD) / sum(unname(QTD)) * 100,1), "%")),
   hovertemplate = paste('%{text}<extra></extra>')
 ) %>% layout(barmode = 'group', yaxis= list(showticklabels = FALSE, title = ""), 
-             xaxis = list(title="", tickfont = list(size = 14)))
+             xaxis = list(categoryorder = "total descending", title="", tickfont = list(size = 14)))
              
 
   ggplotly(chart) }

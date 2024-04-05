@@ -4,7 +4,7 @@
 # Author: Marcelo Santos
 # Fonte : https://opendatasus.saude.gov.br/dataset/srag-2021-a-2023
 # Advisor: Joao Pedro Albino
-# Alterações feitas em: 25/06/2023
+# Alterações feitas em: 25/03/2024
 
 # Diretorio da Trabalho
 setwd('D:/GoogleDrive/Mestrado/PPGMIT-openDataSUS')
