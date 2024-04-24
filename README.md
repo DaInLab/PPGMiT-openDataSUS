@@ -1,4 +1,4 @@
-# UM DASHBOARD DE DADOS ABERTOS DE ÓBITOS POR COVID-19 NO BRASIL
+# DASHBOARD DE DADOS ABERTOS DE ÓBITOS POR COVID-19 NO BRASIL
 Relatório Técnico apresentado ao Programa de Pós-graduação em Mídia e Tecnologia (PPGMiT) – FAAC – UNESP – Bauru para obtenção do título de Mestre em Mídia e Tecnologia, sob a orientação do Prof. Associado João Pedro Albino. 
 Aluno Pos Graduação: Marcelo José dos Santos 
 https://www.linkedin.com/in/marcelo-j-santos/
