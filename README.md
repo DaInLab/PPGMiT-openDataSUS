@@ -31,7 +31,18 @@ Este dashboard oferece uma exibição de dados abertos consolidados por meio de 
 
 \imagens     Contém os arquivos de imagens utilizadas no dashboard.
           
-Software Registrado no INPI sob Numero: 
+## Software Registrado no INPI:
+Processo: BR 51 2024 001216-8 Código 730 - Expedição do Certificado de Registro
+
+Título: Dashboard Óbitos COVID-19 no Brasil
+Titular: MARCELO JOSE DOS SANTOS
+Criador: JOÃO PEDRO ALBINO; MARCELO JOSE DOS SANTOS
+Linguagem: R
+
+Campo de Aplicação: AD-01; ED-01; IN-02
+Tipo de Programa: AP-01; FA-01; FA-04; GI-01; GI-07; UT-01
+Data da Criação: 02/10/2023
+
 
 Bauru 25 de Março de 2024.
 
